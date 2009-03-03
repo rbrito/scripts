@@ -122,8 +122,8 @@ This program was written by Rogerio Brito <rbrito@users.sf.net> on 2009-03-02.
 
 =cut
 
-# ==============================================================================
 
+# ==============================================================================
 # Auxiliary functions for generation of the output
 sub pr_header {
 print <<EOF
@@ -143,8 +143,8 @@ EOF
 }
 sub pr_footer { print "\t</array>\n</dict>\n</plist>\n"; }
 
-# ==============================================================================
 
+# ==============================================================================
 # Functions to generate the proper XML tags for iTunes.
 sub pr_open_dict  { print "\t\t<dict>\n"; }
 sub pr_key        { print "\t\t\t<key>", encode("utf8", $_[0]), "</key>"; }
@@ -154,8 +154,8 @@ sub pr_date       { print "<date>", encode("utf8", $_[0]), "</date>\n"; }
 sub pr_boolean    { if ($_[0]) { print "<true/>\n"; } else { print "<false/>\n"; }; }
 sub pr_close_dict { print "\t\t</dict>\n"; }
 
-# ==============================================================================
 
+# ==============================================================================
 # Auxiliary functions
 sub gen_serial_no {
     return sprintf("%04X%04X%04X%04X", rand(0xffff), rand(0xffff),
@@ -163,54 +163,7 @@ sub gen_serial_no {
 }
 
 
-#
-#
-#
-sub generate_song_entry_old {
-    my $mp3 = new MP3::Info $_[0];
-    my %dict = ();
-
-    # FIXME: include "Disc Number" (integer) & "Disc Count" (integer)
-    if (defined($mp3->{TITLE}))  { $dict{"Name"}   = ["string", $mp3->{TITLE}]; }
-    if (defined($mp3->{ARTIST})) { $dict{"Artist"} = ["string", $mp3->{ARTIST}]; }
-    if (defined($mp3->{ALBUM}))  { $dict{"Album"}  = ["string", $mp3->{ALBUM}]; }
-    if (defined($mp3->{GENRE}))  { $dict{"Genre"}  = ["string", $mp3->{GENRE}]; }
-    if (defined($mp3->{YEAR}))   { $dict{"Year"}   = ["integer", $mp3->{YEAR}]; }
-    if (defined($mp3->{SECS}))   { $dict{"Total Time"} = ["integer", int($mp3->{SECS})]; }
-    if (defined($mp3->{BITRATE})){ $dict{"Bit Rate"}   = ["integer", $mp3->{BITRATE}]; }
-    if (defined($mp3->{VBR}))    { $dict{"Has Variable Bit Rate"} = ["boolean", $mp3->{VBR}]; }
-    if (defined($mp3->{FREQUENCY})) { $dict{"Sample Rate"} = ["integer", $mp3->{FREQUENCY}*1000]; }
-
-    { $dict{"Date"} = ["string", 12345678]; }
-    { $dict{"Date Modified"} = ["date", "2009-03-02T19:50:00Z"]; }
-
-    if (defined($mp3->{OFFSET}) && defined($mp3->{SIZE})){
-	$dict{"Size"} = ["integer", $mp3->{OFFSET}+$mp3->{SIZE}];
-    }
-
-    { $dict{"Supports ID3 Tags"} = ["boolean", 1]; }
-    { $dict{"Numeric Path"} = ["string", "1:1:1"]; }
-    { $dict{"File Extension"} = ["string", "mp3"]; }
-
-    $mp3->{TRACKNUM} =~ m!(\d+)/?(\d+)?!;
-    if (defined($1)) { $dict{"Track Number"} = ["integer", int($1)]; }
-    if (defined($2)) { $dict{"Track Count"}  = ["integer", int($2)]; }
-
-    pr_open_dict();
-
-    foreach my $key (sort keys %dict) {
-	if ($dict{$key}->[1]) {
-	    pr_key("$key");
-	    "pr_$dict{$key}->[0]"->(encode("utf8", $dict{$key}->[1]));
-	}
-    }
-
-    pr_close_dict();
-}
-
-
 # ==============================================================================
-
 # Function to grab information from an MP3 file
 sub generate_song_entry {
     my $mp3 = new MP3::Tag $_[0];
@@ -258,10 +211,8 @@ sub generate_song_entry {
 }
 
 
-
 # ==============================================================================
 # main program
-# ==============================================================================
 {
     my $burner = $_[0]?$_[0]:"DVD-ROM DRIVE";
     my $serial = gen_serial_no();
