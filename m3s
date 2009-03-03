@@ -1,4 +1,4 @@
-#!/usr/bin/perl -W -T
+#!/usr/bin/perl -W
 #
 # Copyright (C) 2009 Rogério Brito <rbrito@users.sf.net>
 #
@@ -11,7 +11,7 @@
 
 use strict 'vars';
 use warnings;
-#use diagnostics -verbose;
+use diagnostics -verbose;
 use utf8;
 
 use Encode qw(encode decode);
@@ -126,7 +126,7 @@ This program was written by Rogerio Brito <rbrito@users.sf.net> on 2009-03-02.
 # ==============================================================================
 # Auxiliary functions for generation of the output
 sub pr_header {
-print <<EOF
+print FH <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -141,18 +141,18 @@ print <<EOF
 	<array>
 EOF
 }
-sub pr_footer { print "\t</array>\n</dict>\n</plist>\n"; }
+sub pr_footer { print FH "\t</array>\n</dict>\n</plist>\n"; }
 
 
 # ==============================================================================
 # Functions to generate the proper XML tags for iTunes.
-sub pr_open_dict  { print "\t\t<dict>\n"; }
-sub pr_key        { print "\t\t\t<key>", encode("utf8", $_[0]), "</key>"; }
-sub pr_string     { print "<string>", encode("utf8", $_[0]), "</string>\n"; }
-sub pr_integer    { print "<integer>", encode("utf8", $_[0]), "</integer>\n"; }
-sub pr_date       { print "<date>", encode("utf8", $_[0]), "</date>\n"; }
-sub pr_boolean    { if ($_[0]) { print "<true/>\n"; } else { print "<false/>\n"; }; }
-sub pr_close_dict { print "\t\t</dict>\n"; }
+sub pr_open_dict  { print FH "\t\t<dict>\n"; }
+sub pr_key        { print FH "\t\t\t<key>", my_utf8_encode($_[0]), "</key>"; }
+sub pr_string     { print FH "<string>", my_utf8_encode($_[0]), "</string>\n"; }
+sub pr_integer    { print FH "<integer>", int(my_utf8_encode($_[0])), "</integer>\n"; }
+sub pr_date       { print FH "<date>", my_utf8_encode($_[0]), "</date>\n"; }
+sub pr_boolean    { print FH ($_[0])?"<true/>\n":"<false/>\n"; }
+sub pr_close_dict { print FH "\t\t</dict>\n"; }
 
 
 # ==============================================================================
@@ -162,6 +162,14 @@ sub gen_serial_no {
 		   rand(0xffff), rand(0xffff));
 }
 
+sub escape_char { my $st = shift; $st =~ s/&/&#38;/g; return $st; }
+#sub my_utf8_encode { return escape_char((utf8::is_utf8($_[0]))?$_[0]:encode("utf8", $_[0])); }
+sub my_utf8_encode { return escape_char(encode("utf8", $_[0])); }
+
+sub wanted {
+    return unless ($File::Find::name =~ m!\.mp3$!i);
+    -f && -r && generate_song_entry($File::Find::name);
+}
 
 # ==============================================================================
 # Function to grab information from an MP3 file
@@ -198,7 +206,7 @@ sub generate_song_entry {
     if (defined($size))		{ pr_key("Size"); pr_integer($size); };
 
     if ((exists($mp3->{ID3v1}) or exists($mp3->{ID3v2}))) {
-	pr_key("Supports ID3 Tags"); pr_boolean(1);
+	pr_key("Supports ID3 Tags"); pr_boolean("true");
     }
 
     # Compulsory filling
@@ -213,12 +221,19 @@ sub generate_song_entry {
 
 # ==============================================================================
 # main program
-{
-    my $burner = $_[0]?$_[0]:"DVD-ROM DRIVE";
-    my $serial = gen_serial_no();
-    my $title  = $_[1]?$_[1]:"My MP3 CD-ROM";
 
-    pr_header($burner, $serial, $title);
-    generate_song_entry("test.mp3");
-    pr_footer();
-}
+my $root   = $_[0]?$_[0]:".";
+my $title  = $_[1]?my_utf8_encode($_[1]):"My MP3 CD-ROM";
+my $burner = $_[2]?my_utf8_encode($_[0]):"DVD-ROM DRIVE";
+my $serial = gen_serial_no();
+
+open(FH, ">ContentsDB.xml") or
+    die("Error opening file ContentsDB.xml: $!\n");
+
+pr_header($burner, $serial, $title);
+
+find(\&wanted, $root);
+pr_footer();
+
+close(FH) or
+    die("Error closing file ContentsDB.xml: $!\n");
