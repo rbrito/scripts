@@ -25,7 +25,7 @@ iTunes
 
 =head1 SYNOPSIS
 
-  m3s [root-dir] [dvd-title]
+  m3s [root-dir] [disc-title] [burner-model]
 
 =head1 DESCRIPTION
 
@@ -37,13 +37,21 @@ default action that iTunes takes when an Audio CD is inserted on the
 optical reader of the computer).
 
 The C<root-dir> parameter specifies the root directory of the tree where
-the MP3 files are located. They are, then, parsed and a file is written
-at the C<root-dir> directory. This makes it convenient to create a
-CD/DVD image.
+the MP3 files are located. If it is not specified, then, it is assumed
+to be the current working directory. The MP3 files are, then, parsed and
+the ContentsDB.xml file is written at the C<root-dir> directory. This
+makes it convenient to create a CD/DVD image.
 
 A command like the following may be used:
 
-      genisoimage -J -ucs-level 1 -o dvd-title.iso -V "dvd-title" root-dir
+    genisoimage -J -ucs-level 1 -o disc-title.iso -V "disc-title" root-dir
+
+The C<disc-title> parameter specifies the name that iTunes will show to
+the user as being the name of the disc.
+
+The C<burner-model> parameter is purely cosmetic and is used to inform
+iTunes which drive model was used to burn the disc. It apparently serves
+no purpose other than this (please, let me know if I am mistaken).
 
 Listed below are the fields that Apple's iTunes version 8 writes in each
 song's stanza, with the kind of value corresponding to that field:
