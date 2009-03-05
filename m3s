@@ -11,11 +11,9 @@
 
 use strict 'vars';
 use warnings;
-use diagnostics -verbose;
 use utf8;
 
 use Encode qw(encode decode);
-use File::Find;
 use MP3::Tag;
 
 
@@ -166,14 +164,53 @@ sub escape_char { my $st = shift; $st =~ s/&/&#38;/g; return $st; }
 #sub my_utf8_encode { return escape_char((utf8::is_utf8($_[0]))?$_[0]:encode("utf8", $_[0])); }
 sub my_utf8_encode { return escape_char(encode("utf8", $_[0])); }
 
-sub wanted {
-    return unless ($File::Find::name =~ m!\.mp3$!i);
-    -f && -r && generate_song_entry($File::Find::name);
+#sub wanted {
+#    return unless ($File::Find::name =~ m!\.mp3$!i);
+#    -f && -r && generate_song_entry($File::Find::name);
+#}
+
+
+sub action {
+    print "$_[1]\n";
 }
+
+
+sub recurse_dir {
+    my $dh;
+
+    opendir($dh, $_[0]) or die("Error opening dir $_[0]: $!\n");
+
+    my $par_name = $_[1];
+    my $file_no = 0;
+    my $dir_no = 0;
+
+    # grep {!/\.|\.\./}
+    foreach (sort readdir($dh)) { # for each entry
+	my $name = "$_[0]/$_";
+	if (-d $name and $_ ne "." and $_ ne "..") {
+	    #print " **** DEBUG: entering directory: $name\n";
+	    ++$dir_no;
+	    recurse_dir($name, $par_name?"$par_name:$dir_no":$dir_no, $dir_no);
+	} elsif ($_ ne "." and $_ ne "..") {
+	    #print "  ******* DEBUG: $name\n";
+	    ++$file_no;
+
+	    my $filename = $_[0];
+	    if (m!\.mp3$!i) {
+		generate_song_entry("$_[0]/$_",
+				    $par_name?"$par_name:$file_no":$file_no,
+				    $file_no);
+	    }
+	}
+    }
+    closedir($dh) or die("Error closing dir $_[0]: $!\n");
+}
+
 
 # ==============================================================================
 # Function to grab information from an MP3 file
 sub generate_song_entry {
+    print($_[0], "\n");
     my $mp3 = new MP3::Tag $_[0];
 
     # Perform the information gathering from the file:
@@ -212,7 +249,7 @@ sub generate_song_entry {
     # Compulsory filling
     { pr_key("Date"); pr_string(12345678); };
     { pr_key("Date Modified"); pr_date("2009-03-02T19:50:00Z"); };
-    { pr_key("Numeric Path"); pr_string("1:1:1"); };
+    { pr_key("Numeric Path"); pr_string("$_[1]"); };
     { pr_key("File Extension"); pr_string("mp3"); };
 
     pr_close_dict();
@@ -222,18 +259,22 @@ sub generate_song_entry {
 # ==============================================================================
 # main program
 
-my $root   = $_[0]?$_[0]:".";
-my $title  = $_[1]?my_utf8_encode($_[1]):"My MP3 CD-ROM";
-my $burner = $_[2]?my_utf8_encode($_[0]):"DVD-ROM DRIVE";
+my $root   = defined($ARGV[0])?$ARGV[0]:".";
+my $file   = "$root/ContentsDB.xml";
+my $title  = defined($ARGV[1])?my_utf8_encode($ARGV[1]):"My MP3 CD-ROM";
+my $burner = defined($ARGV[2])?my_utf8_encode($ARGV[2]):"DVD-ROM DRIVE";
 my $serial = gen_serial_no();
 
-open(FH, ">ContentsDB.xml") or
-    die("Error opening file ContentsDB.xml: $!\n");
+#print "$root, $file, $title, $burner, $serial\n";
+
+open(FH, ">$file") or die("Error opening file $file: $!\n");
 
 pr_header($burner, $serial, $title);
 
-find(\&wanted, $root);
+#find(\&wanted, $root);
+
+recurse_dir($root, "");
+
 pr_footer();
 
-close(FH) or
-    die("Error closing file ContentsDB.xml: $!\n");
+close(FH) or die("Error closing file $file: $!\n");
