@@ -43,7 +43,7 @@ sub pr_footer { print FH "\t</array>\n</dict>\n</plist>\n"; }
 sub pr_open_dict  { print FH "\t\t<dict>\n"; }
 sub pr_key        { print FH "\t\t\t<key>", my_utf8_encode($_[0]), "</key>"; }
 sub pr_string     { print FH "<string>", my_utf8_encode($_[0]), "</string>\n"; }
-sub pr_integer    { print FH "<integer>", int(my_utf8_encode($_[0])), "</integer>\n"; }
+sub pr_integer    { print FH "<integer>", my_utf8_encode($_[0]), "</integer>\n"; }
 sub pr_date       { print FH "<date>", my_utf8_encode($_[0]), "</date>\n"; }
 sub pr_boolean    { print FH ($_[0])?"<true/>\n":"<false/>\n"; }
 sub pr_close_dict { print FH "\t\t</dict>\n"; }
@@ -101,7 +101,7 @@ sub generate_song_entry {
     my ($track1, $track2, $disc1, $disc2) = ($mp3->track1(), $mp3->track2(),
 					     $mp3->disk1(), $mp3->disk2());
 
-    my ($secs, $bitrate, $frequency, $is_vbr, $size) = (int($mp3->total_secs()),
+    my ($time, $bitrate, $frequency, $is_vbr, $size) = (int($mp3->total_secs()*1000),
 							$mp3->bitrate_kbps(),
 							$mp3->frequency_Hz(),
 							$mp3->is_vbr(),
@@ -122,7 +122,7 @@ sub generate_song_entry {
     if (defined($track2))	{ pr_key("Track Count"); pr_integer($track2); }
     if (defined($disc1))	{ pr_key("Disc Number"); pr_integer($disc1); }
     if (defined($disc2))	{ pr_key("Disc Count"); pr_integer($disc2); }
-    if (defined($secs))		{ pr_key("Total Time"); pr_integer($secs); }
+    if (defined($time))		{ pr_key("Total Time"); pr_integer($time); }
     if (defined($bitrate))	{ pr_key("Bit Rate"); pr_integer($bitrate); }
     if (defined($frequency))	{ pr_key("Sample Rate"); pr_integer($frequency); }
     if (defined($is_vbr))	{ pr_key("Has Variable Bit Rate"); pr_boolean($is_vbr); }
