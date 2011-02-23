@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright © 2010-2011 Rogério Theodoro de Brito <rbrito@ime.usp.br>
+#
+# Python script for those who hate emails in HTML and who prefer their inbox
+# to have as many messages in pure text as feasible. This script is
+# generally meant to be run as a filter with procmail or some other mail
+# delivery agent.
+#
+# It tries to be moderately conservative and only act when things are
+# moderately safe:
+#
+# *  If the message is multipart and has a text/plain and a text/html part,
+#    keep the text/plain part only.
+# *  In all other cases keep the message intact.
+#
+# License: GPL-2+
+#
+
+import email
+
+def compose_message(orig, body):
+    wanted = email.message.Message()
+    wanted.set_payload(body.get_payload())
+    for field in ["content-length", "content-type", "lines", "status"]:
+        del orig[field]
+
+    for k, v in orig.items(): wanted.__setitem__(k, v)
+    for k, v in body.items(): wanted.__setitem__(k, v)
+    return wanted
+
+
+def sanitize(msg):
+    if not msg.is_multipart(): return msg
+
+    # 'composition' is a bitmask containing the kind of the parts
+    TEXTPLAIN = 1 # text/plain
+    TEXTHTML  = 2 # text/html
+    MISCPARTS = 4 # anything else
+
+    composition = 0
+    text_taken = False
+
+    for part in msg.walk():
+        if (part.get_content_maintype() == "multipart" or
+            part.get_content_type() == "message/external-body" or
+            part.get_payload() == ""):
+            continue
+        elif part.get_content_type() == "text/plain":
+            if not text_taken:
+                text_taken = True
+                body = part
+                composition |= TEXTPLAIN
+        elif part.get_content_type() == "text/html":
+                composition |= TEXTHTML
+        else:
+            composition |= MISCPARTS
+
+    if composition == (TEXTPLAIN + TEXTHTML) or composition == TEXTPLAIN:
+        return compose_message(msg, body)
+    else:
+        return msg
+
+
+# Main program
+if __name__ == "__main__":
+    import sys
+    print sanitize(email.message_from_file(sys.stdin)).as_string(unixfrom=False),
