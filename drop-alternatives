@@ -21,19 +21,26 @@
 import email
 import email.message
 
+
 def compose_message(orig, body):
     wanted = email.message.Message()
     wanted.set_payload(body.get_payload())
-    for field in ["content-length", "content-type", "lines", "status"]:
+
+    unwanted_fields = ["content-length", "content-type", "lines", "status"]
+
+    for field in unwanted_fields:
         del orig[field]
 
-    for k, v in orig.items(): wanted.__setitem__(k, v)
-    for k, v in body.items(): wanted.__setitem__(k, v)
+    for k, v in orig.items():
+        wanted.__setitem__(k, v)
+    for k, v in body.items():
+        wanted.__setitem__(k, v)
     return wanted
 
 
 def sanitize(msg):
-    if not msg.is_multipart(): return msg
+    if not msg.is_multipart():
+        return msg
 
     # 'composition' is a bitmask containing the kind of the parts
     TEXTPLAIN = 1 # text/plain
@@ -54,7 +61,7 @@ def sanitize(msg):
                 body = part
                 composition |= TEXTPLAIN
         elif part.get_content_type() == "text/html":
-                composition |= TEXTHTML
+            composition |= TEXTHTML
         else:
             composition |= MISCPARTS
 
