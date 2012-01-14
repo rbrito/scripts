@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#echo 5 > /proc/sys/vm/laptop_mode
+echo 0 > /proc/sys/kernel/nmi_watchdog
+#echo 1 > /sys/module/snd_ac97_codec/parameters/power_save
+echo 2000 > /proc/sys/vm/dirty_writeback_centisecs
+
+rmmod uhci_hcd
+rmmod ohci_hcd
+
+for i in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo ondemand > $i; done
+for i in /sys/bus/usb/devices/*/power/autosuspend; do echo 1 > $i; done
+for i in /sys/bus/usb/devices/*/power/level; do echo auto > $i; done
+for i in /sys/bus/usb/devices/*/power/control; do echo auto > $i; done
+for i in /sys/class/scsi_host/*/link_power_management_policy; do echo min_power > $i; done
+
+echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/powersave_bias
+echo 0 > /sys/devices/system/cpu/cpufreq/ondemand/ignore_nice_load
+
+amixer set Mic mute nocap
+echo Y > /sys/module/snd_hda_intel/parameters/power_save_controller
+echo 1 > /sys/module/snd_hda_intel/parameters/power_save
+
+# Tune the scheduler for saving power
+echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
+echo 2 > /sys/devices/system/cpu/sched_smt_power_savings
+
+# -B 1 spins down and up all the time
+hdparm -B 128 -M 128 /dev/sda
+ethtool -s eth0 wol d
+iwconfig wlan0 power timeout 500ms
