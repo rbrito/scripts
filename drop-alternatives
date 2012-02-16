@@ -39,6 +39,15 @@ def compose_message(orig, body):
 
 
 def sanitize(msg):
+    """
+    It tries to be moderately conservative and only act when things are
+    moderately safe:
+
+     * If the message is multipart and has a text/plain and a text/html
+       part, keep the text/plain part only.
+
+     * In all other cases keep the message intact.
+    """
     if not msg.is_multipart():
         return msg
 
