@@ -30,4 +30,8 @@ hdparm -B 128 -M 128 /dev/sda
 
 # Disable wake-on lan
 ethtool -s eth0 wol d
+
+# For intel wireless stuff, to save power
+iwpriv wlan0 set_power 7
+
 iwconfig wlan0 power timeout 500ms
