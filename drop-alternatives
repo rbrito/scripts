@@ -32,9 +32,9 @@ def compose_message(orig, body):
         del orig[field]
 
     for k, v in orig.items():
-        wanted.__setitem__(k, v)
+        wanted[k] = v
     for k, v in body.items():
-        wanted.__setitem__(k, v)
+        wanted[k] = v
     return wanted
 
 
