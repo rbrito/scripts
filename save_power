@@ -27,5 +27,7 @@ echo 2 > /sys/devices/system/cpu/sched_smt_power_savings
 
 # -B 1 spins down and up all the time
 hdparm -B 128 -M 128 /dev/sda
+
+# Disable wake-on lan
 ethtool -s eth0 wol d
 iwconfig wlan0 power timeout 500ms
