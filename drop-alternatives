@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2010-2011 Rogério Theodoro de Brito <rbrito@ime.usp.br>
+# Copyright © 2010-2012 Rogério Theodoro de Brito <rbrito@ime.usp.br>
 #
 # Python script for those who hate emails in HTML and who prefer their inbox
 # to have as many messages in pure text as feasible. This script is
