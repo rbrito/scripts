@@ -3,7 +3,7 @@
 #echo 5 > /proc/sys/vm/laptop_mode
 echo 0 > /proc/sys/kernel/nmi_watchdog
 #echo 1 > /sys/module/snd_ac97_codec/parameters/power_save
-echo 2000 > /proc/sys/vm/dirty_writeback_centisecs
+echo 1500 > /proc/sys/vm/dirty_writeback_centisecs
 
 # rmmod uhci_hcd
 # rmmod ohci_hcd
