@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #echo 5 > /proc/sys/vm/laptop_mode
 echo 0 > /proc/sys/kernel/nmi_watchdog
