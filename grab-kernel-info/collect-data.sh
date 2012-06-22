@@ -14,7 +14,7 @@ cp /proc/ioports		proc-ioports.txt
 cp /var/log/Xorg.0.log		.
 
 uname -a			> uname-a.txt
-dmesg				> $DATE-dmesg-$KVER.log
+dmesg -s $((128 * 1024))	> $DATE-dmesg-$KVER.log
 acpidump			> acpidump.txt
 dmidecode			> dmidecode.txt
 
