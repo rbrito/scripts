@@ -28,7 +28,7 @@ lsmod				> lsmod.txt
 lshw				> lshw.txt
 
 mount -t debugfs none /sys/kernel/debug/
-tar cvf debugfs-$DATE.tar /sys/kernel/debug
+tar cf debugfs-$DATE.tar /sys/kernel/debug
 
 cd ..
-tar jcvf $DIR.tar.bz2 $DIR
+tar jcf $DIR.tar.bz2 $DIR
