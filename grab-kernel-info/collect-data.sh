@@ -2,7 +2,7 @@
 
 DATE=$(date +%s)
 KVER=$(uname -r)
-DIR=kernel-debug-$DATE
+DIR=kernel-$KVER-debug-$DATE
 mkdir $DIR
 cd $DIR
 
