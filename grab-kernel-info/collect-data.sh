@@ -31,4 +31,4 @@ mount -t debugfs none /sys/kernel/debug/
 tar cvf debugfs-$DATE.tar /sys/kernel/debug
 
 cd ..
-tar zcvf $DIR.tar.gz $DIR
+tar jcvf $DIR.tar.bz2 $DIR
