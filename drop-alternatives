@@ -49,10 +49,7 @@ def compose_message(orig, body):
     # The dictionaries `orig` and `body` have only headers as their items.
     for field in unwanted_fields:
         del orig[field]
-
-    for k, v in orig.items():
-        wanted[k] = v
-    for k, v in body.items():
+    for k, v in orig.items() + body.items():
         wanted[k] = v
 
     return wanted
