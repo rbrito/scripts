@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
+simplechaps.py
+
+Copyright 2012, Rogério Theodoro de Brito <rbrito@ime.usp.br>
+
 Simple generator of chapter files suitable for use with mkvmerge when
 creating a concatenated file from multiple video files (think: shows taken
 from Youtube) and we want each of the multiple files to be have a
@@ -30,10 +34,7 @@ in:
 
 with the `chap_template.txt` file having the (nasty) contents:
 
-    General;%FileName%\n%Duration/String3%\n
-
-
-Copyright 2012, Rogério Theodoro de Brito <rbrito@ime.usp.br>
+    General;%Duration/String3%\n%FileName%\n
 """
 
 import dateutil.parser
