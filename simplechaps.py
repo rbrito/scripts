@@ -9,21 +9,23 @@ import sys
 # Contents of chap_template.txt:
 #     General;%FileName%\n%Duration/String3%\n
 
-# FIXME: Kludge, as I can't seem to get everyting normalized in UTC
-EPOCH = dateutil.parser.parse('1970-01-01T00:00:00 UTC').strftime('%s.%f')
+def time_to_timestamp(stamp):
+    return dateutil.parser.parse('1970-01-01T%s UTC' % stamp).strftime('%s.%f')
 
-def time_to_timestamp(s):
-    return dateutil.parser.parse('1970-01-01T%s UTC' % s).strftime('%s.%f')
+# Kludge, as I can't seem to get everyting normalized in UTC
+EPOCH = time_to_timestamp('00:00:00')
+
 
 def main():
-    L = sys.stdin.readlines()
-    L = [l.strip() for l in L if l.strip() != '']  # redundant
+    lines = sys.stdin.readlines()
+    lines = [line.strip() for line in lines if line.strip() != '']  # redundant
 
-    L.pop()  # remove the last timestamp, as that's not used
-    L.insert(0, '00:00:00.000')  # insert the time to be used as basis
+    lines.pop()  # remove the last timestamp, as that's not used
+    lines.insert(0, '00:00:00.000')  # insert the time to be used as basis
 
-    for i in range(0, len(L), 2):
-        print 'CHAPTER%02d=%s' % (i/2 + 1, L[i])
-        print 'CHAPTER%02dNAME=%s' % (i/2+1, L[i+1])
+    for i in range(0, len(lines), 2):
+        print 'CHAPTER%02d=%s' % (i/2 + 1, lines[i])
+        print 'CHAPTER%02dNAME=%s' % (i/2 + 1, lines[i+1])
 
-main()
+if __name__ == '__main__':
+    main()
