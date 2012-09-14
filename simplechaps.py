@@ -39,23 +39,37 @@ Copyright 2012, Rogério Theodoro de Brito <rbrito@ime.usp.br>
 import dateutil.parser
 import sys
 
-def time_to_timestamp(stamp):
-    return dateutil.parser.parse('1970-01-01T%s UTC' % stamp).strftime('%s.%f')
+from datetime import datetime
+
+
+def time_to_timestamp(position):
+    return float(dateutil.parser.parse('1970-01-01T%s UTC' % position).strftime('%s.%f'))
 
 # Kludge, as I can't seem to get everyting normalized in UTC
 EPOCH = time_to_timestamp('00:00:00')
+
+
+def timestamp_to_hour(stamp):
+    stamp = float(stamp)
+    hh = int(stamp) / 3600
+    mm = (int(stamp) % 3600) / 60
+    ss = int(stamp) % 60
+    uu = (stamp - int(stamp)) * 1000
+    return '%02d:%02d:%02d.%03d' % (hh, mm, ss, uu)
 
 
 def main():
     lines = sys.stdin.readlines()
     lines = [line.strip() for line in lines if line.strip() != '']  # redundant
 
-    lines.pop()  # remove the last timestamp, as that's not used
-    lines.insert(0, '00:00:00.000')  # insert the time to be used as basis
-
+    # All times in the lines of the file are shifted by EPOCH and we unshift
+    # them.
+    cur_time = 0
     for i in range(0, len(lines), 2):
-        print 'CHAPTER%02d=%s' % (i/2 + 1, lines[i])
-        print 'CHAPTER%02dNAME=%s' % (i/2 + 1, lines[i+1])
+        print 'CHAPTER%02d=%s' % (i/2 + 1, timestamp_to_hour(cur_time))
+        print 'CHAPTER%02dNAME=%s' % (i/2 + 1, lines[i + 1])
+        cur_time += time_to_timestamp(lines[i]) - EPOCH
+
 
 if __name__ == '__main__':
     main()
