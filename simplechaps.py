@@ -61,7 +61,7 @@ def timestamp_to_hour(stamp):
 
 def main():
     lines = sys.stdin.readlines()
-    lines = [line.strip() for line in lines if line.strip() != '']  # redundant
+    lines = [line.strip() for line in lines if line != '\n']
 
     # All times in the lines of the file are shifted by EPOCH and we unshift
     # them.
