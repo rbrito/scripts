@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-import logging
-
 from bs4 import BeautifulSoup
 
 from novaprinter import prettyPrinter
