@@ -34,13 +34,15 @@ in:
 """
 
 import dateutil.parser
+import re
 import sys
 
 from datetime import datetime
 
 
 def time_to_timestamp(position):
-    return float(dateutil.parser.parse('1970-01-01T%s UTC' % position).strftime('%s.%f'))
+    return float(dateutil.parser.parse('1970-01-01T%s UTC' %
+                                       position).strftime('%s.%f'))
 
 # Kludge, as I can't seem to get everyting normalized in UTC
 EPOCH = time_to_timestamp('00:00:00')
@@ -63,8 +65,10 @@ def main():
     # them.
     cur_time = 0
     for i in range(0, len(lines), 2):
+        normalized_name = lines[i+1].replace('_', ' ')
+        normalized_name = re.sub('^\d+-','', normalized_name)
         print 'CHAPTER%02d=%s' % (i/2 + 1, timestamp_to_hour(cur_time))
-        print 'CHAPTER%02dNAME=%s' % (i/2 + 1, lines[i + 1])
+        print 'CHAPTER%02dNAME=%s' % (i/2 + 1, normalized_name)
         cur_time += time_to_timestamp(lines[i]) - EPOCH
 
 
