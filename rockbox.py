@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from novaprinter import prettyPrinter
 from helpers import retrieve_url
 
-class engine_name(object):
+class rockbox(object):
     url = 'http://psychocydd.co.uk'
     name = 'RockBox'
 
