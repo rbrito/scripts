@@ -1,9 +1,15 @@
 #VERSION: 1.0
 #AUTHORS: Rogerio Brito (rbrito@ime.usp.br)
+"""
+Plugin for qbittorrent to search material from http://psychocydd.co.uk (aka
+RockBox).
+"""
+
 from bs4 import BeautifulSoup
 
 from novaprinter import prettyPrinter
 from helpers import retrieve_url
+
 
 class rockbox(object):
     url = 'http://psychocydd.co.uk'
@@ -12,6 +18,9 @@ class rockbox(object):
     supported_categories = {'all': '0', 'movies': '6', 'music': '1'}
 
     def __init__(self):
+        """
+        We don't have anything specific to do for initialization.
+        """
         pass
 
     def search(self, what, cat='all'):
