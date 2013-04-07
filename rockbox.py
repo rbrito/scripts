@@ -33,7 +33,8 @@ class rockbox(object):
         For each parsed line of the result, we put it in a dictionary and
         pass it to the prettyPrint function.
         """
-        data = retrieve_url('http://psychocydd.co.uk/torrents.php?search=%s' % what)
+        data = retrieve_url('http://psychocydd.co.uk/torrents.php?search=%s'
+                            % what)
 
         soup = BeautifulSoup(data)
         res = soup.find_all('table', attrs={'width': '100%', 'class': 'lista'})
