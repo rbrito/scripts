@@ -1,3 +1,5 @@
+#VERSION: 1.0
+#AUTHORS: Rogerio Brito (rbrito@ime.usp.br)
 from bs4 import BeautifulSoup
 
 from novaprinter import prettyPrinter
