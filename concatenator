@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+import fnmatch
+import os
+
+EXT = 'flv'
+
+OFFSET = 3
+
+os.system("mediainfo --Inform='General;%Duration/String3%\\n%FileName%\\n'"
+          " *." + EXT + " | ~/src/utils/simplechaps.py > chaps.txt")
+
+our_basename = os.path.basename(os.path.realpath('.'))
+
+dir_entries = os.walk('.').next()
+
+our_files = sorted(fnmatch.filter(dir_entries[2], '*.' + EXT))
+
+os.system(
+    ' '.join(
+        [
+            "mkvmerge --chapters chaps.txt",
+            "-o ../%s.mkv" % our_basename,
+            ' + '.join(our_files)
+            ]
+        )
+    )
