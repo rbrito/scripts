@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import json
 import re
 
 def parse_headers(lines):
@@ -113,13 +112,7 @@ if __name__ == '__main__':
     with open('example.cddb') as f:
         lines = f.readlines()
 
-    # seconds, frames = parse_headers(lines)
-    # print('The disc has %d seconds.' % seconds)
-    # print('The tracks begin: %s.' % frames[:-1])
-    # print('The tracks delim: %s.' % frames)
-
     data = parse_headers(lines)
-    #print json.dumps(data, indent=4)
 
     create_cue(data)
     #print create_cue(data)
