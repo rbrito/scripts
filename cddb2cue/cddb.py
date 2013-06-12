@@ -2,6 +2,7 @@
 
 import re
 
+
 def parse_headers(lines):
     """
     Parse 'comment' lines.
@@ -22,8 +23,10 @@ def parse_headers(lines):
     }
 
     # This doesn't actually match comments only at the beginning (yet)
-    header_lines = [line for line in lines if line != '' and line.startswith('#')]
-    other_lines = [line for line in lines if line != '' and not line.startswith('#')]
+    header_lines = [line for line in lines
+                    if line != '' and line.startswith('#')]
+    other_lines = [line for line in lines
+                   if line != '' and not line.startswith('#')]
 
     # Data from the header
     for line in header_lines:
@@ -85,7 +88,8 @@ def frames_to_hour(stamp):
 
 def create_cue(disc_data):
     """
-    Receives one dictionary like above and prints the info in cuesheet format.
+    Receives one dictionary like above and prints the info in cuesheet
+    format.
     """
     print 'PERFORMER "%s"' % disc_data['artist']
 
@@ -100,7 +104,8 @@ def create_cue(disc_data):
 
     pairs = zip(disc_data['tracktitles'], disc_data['offsets'])
 
-    # FIXME: In the following, 150 should be replaced by first entry of the offsets list.
+    # FIXME: In the following, 150 should be replaced by first entry of
+    # the offsets list.
     for trackno, (tracktitle, offset) in enumerate(pairs):
         print '  TRACK %d AUDIO' % (trackno + 1)
         print '    TITLE "%s"' % tracktitle
