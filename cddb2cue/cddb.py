@@ -30,16 +30,16 @@ def parse_headers(lines):
 
     # Data from the header
     for line in header_lines:
-        m = re.match('^#\s+Track frame offsets:', line)
+        m = re.match(r'^#\s+Track frame offsets:', line)
         if m:
             continue
 
-        m = re.match('^#\s+(\d+)', line)
+        m = re.match(r'^#\s+(\d+)', line)
         if m:
             disc_data['offsets'].append(int(m.group(1)))
             continue
 
-        m = re.match('^#\s+Disc length: (\d+)', line)
+        m = re.match(r'^#\s+Disc length: (\d+)', line)
         if m:
             disc_data['length'] = int(m.group(1))
             disc_data['offsets'].append(int(m.group(1)) * 75)
@@ -47,26 +47,26 @@ def parse_headers(lines):
 
     # Data from the rest of the file
     for line in other_lines:
-        m = re.match('^DTITLE=(.*)\s/\s(.*)', line)
+        m = re.match(r'^DTITLE=(.*)\s/\s(.*)', line)
         if m:
             disc_data['artist'] = m.group(1)
             disc_data['title'] = m.group(2)
             break
 
     for line in other_lines:
-        m = re.match('^DYEAR=(\d+)', line)
+        m = re.match(r'^DYEAR=(\d+)', line)
         if m:
             disc_data['year'] = int(m.group(1))
             break
 
     for line in other_lines:
-        m = re.match('^DGENRE=(.*)', line)
+        m = re.match(r'^DGENRE=(.*)', line)
         if m:
             disc_data['genre'] = m.group(1)
             break
 
     for line in other_lines:
-        m = re.match('^TTITLE(\d+)=(.*)', line)
+        m = re.match(r'^TTITLE(\d+)=(.*)', line)
         if m:
             disc_data['tracktitles'].append(m.group(2))
 
