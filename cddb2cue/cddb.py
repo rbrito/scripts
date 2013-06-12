@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Convert a CDDB file into a corresponding CUE sheet.
+
+Copyright: 2013 Rogério Theodoro de Brito <rbrito@ime.usp.br>
+"""
 
 import re
 
@@ -75,6 +80,11 @@ def parse_headers(lines):
 
 
 def frames_to_hour(stamp):
+    """
+    Given an integer in CD frames (that is, 1/75 of a second), convert it
+    into the corresponding time string of the format hh:mm:ss:ff (or
+    mm:ss:ff, if the value of hours is 0).
+    """
     ff = stamp % 75
     stamp = stamp / 75
     hh = stamp / 3600
