@@ -71,6 +71,43 @@ def parse_headers(lines):
     return disc_data
 
 
+def frames_to_hour(stamp):
+    ff = stamp % 75
+    stamp = stamp / 75
+    hh = stamp / 3600
+    mm = (int(stamp) % 3600) / 60
+    ss = int(stamp) % 60
+
+    if hh:
+        return '%02d:%02d:%02d:%02d' % (hh, mm, ss, ff)
+    else:
+        return '%02d:%02d:%02d' % (mm, ss, ff)
+
+
+def create_cue(disc_data):
+    """
+    Receives one dictionary like above and prints the info in cuesheet format.
+    """
+    print 'PERFORMER "%s"' % disc_data['artist']
+
+    if disc_data['year']:
+        print 'REM DATE %d' % disc_data['year']
+
+    if disc_data['genre']:
+        print 'REM GENRE "%s"' % disc_data['genre']
+
+    print 'TITLE "%s"' % disc_data['title']
+    print 'FILE "%s - %s.mp3" MP3' % (disc_data['artist'], disc_data['title'])
+
+    pairs = zip(disc_data['tracktitles'], disc_data['offsets'])
+
+    # FIXME: In the following, 150 should be replaced by first entry of the offsets list.
+    for trackno, (tracktitle, offset) in enumerate(pairs):
+        print '  TRACK %d AUDIO' % (trackno + 1)
+        print '    TITLE "%s"' % tracktitle
+        print '    INDEX 01 %s' % frames_to_hour(offset - 150)
+
+
 if __name__ == '__main__':
 
     with open('example.cddb') as f:
@@ -82,4 +119,7 @@ if __name__ == '__main__':
     # print('The tracks delim: %s.' % frames)
 
     data = parse_headers(lines)
-    print json.dumps(data, indent=4)
+    #print json.dumps(data, indent=4)
+
+    create_cue(data)
+    #print create_cue(data)
