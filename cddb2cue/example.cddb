@@ -1,7 +1,47 @@
-# Track frame offsets:
-#       150
-#       18265
-#       32945
-#       49812
-# Disc length: 3603 seconds
+500 Unrecognized command.
+500 Unrecognized command.
+210 blues 7c090e0a CD database entry follows (until terminating `.')
+# xmcd CD database file
 #
+# Track frame offsets:
+#	150
+#	15615
+#	32415
+#	54120
+#	67177
+#	86545
+#	105275
+#	119480
+#	140912
+#	162890
+#
+# Disc length: 2320 seconds
+#
+# Revision: 2
+# Processed by: cddbd v1.5.2PL0 Copyright (c) Steve Scherf et al.
+# Submitted via: CDex 1.51
+#
+DISCID=7c090e0a
+DTITLE=ANGEL WITCH / Angel Witch
+TTITLE0=Angel Witch
+TTITLE1=Atlantis
+TTITLE2=White Witch
+TTITLE3=Confused
+TTITLE4=Sorcerers
+TTITLE5=Gorgon
+TTITLE6=Sweet Danger
+TTITLE7=Free Man
+TTITLE8=Angel Of Death
+TTITLE9=Devils Tower
+EXTD= YEAR: 1980
+EXTT0=
+EXTT1=
+EXTT2=
+EXTT3=
+EXTT4=
+EXTT5=
+EXTT6=
+EXTT7=
+EXTT8=
+EXTT9=
+PLAYORDER=
