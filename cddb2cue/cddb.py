@@ -102,24 +102,24 @@ def create_cue(disc_data):
     Receives one dictionary like above and prints the info in cuesheet
     format.
     """
-    print 'PERFORMER "%s"' % disc_data['artist']
+    print('PERFORMER "%s"' % disc_data['artist'])
 
     if disc_data['year']:
-        print 'REM DATE %d' % disc_data['year']
+        print('REM DATE %d' % disc_data['year'])
 
     if disc_data['genre']:
-        print 'REM GENRE "%s"' % disc_data['genre']
+        print('REM GENRE "%s"' % disc_data['genre'])
 
-    print 'TITLE "%s"' % disc_data['title']
-    print 'FILE "%s - %s.mp3" MP3' % (disc_data['artist'], disc_data['title'])
+    print('TITLE "%s"' % disc_data['title'])
+    print('FILE "%s - %s.mp3" MP3' % (disc_data['artist'], disc_data['title']))
 
     initial_offset = disc_data['offsets'][0]
 
-    pairs = zip(disc_data['tracktitles'], disc_data['offsets'])
+    pairs = list(zip(disc_data['tracktitles'], disc_data['offsets']))
     for trackno, (tracktitle, offset) in enumerate(pairs):
-        print '  TRACK %d AUDIO' % (trackno + 1)
-        print '    TITLE "%s"' % tracktitle
-        print '    INDEX 01 %s' % frames_to_hour(offset - initial_offset)
+        print('  TRACK %d AUDIO' % (trackno + 1))
+        print('    TITLE "%s"' % tracktitle)
+        print('    INDEX 01 %s' % frames_to_hour(offset - initial_offset))
 
 
 if __name__ == '__main__':
