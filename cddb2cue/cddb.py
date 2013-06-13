@@ -86,9 +86,9 @@ def frames_to_hour(stamp):
     mm:ss:ff, if the value of hours is 0).
     """
     ff = stamp % 75
-    stamp = stamp / 75
-    hh = stamp / 3600
-    mm = (int(stamp) % 3600) / 60
+    stamp = stamp // 75
+    hh = stamp // 3600
+    mm = (int(stamp) % 3600) // 60
     ss = int(stamp) % 60
 
     if hh:
