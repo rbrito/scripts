@@ -93,12 +93,14 @@ def main():
     successes = 0.0
     for i in range(n):
         successes += switch_strategy()
-    print("After %d trials with the switch doors strategy, the observed frequency of success was %f." % (n, successes/n))
+    print("After %d trials with the switch doors strategy,"
+          " the observed frequency of success was %f." % (n, successes/n))
 
     successes = 0.0
     for i in range(n):
         successes += keep_strategy()
-    print("After %d trials with the keep doors strategy, the observed frequency of success was %f." % (n, successes/n))
+    print("After %d trials with the keep doors strategy,"
+          " the observed frequency of success was %f." % (n, successes/n))
 
 
 if __name__ == '__main__':
