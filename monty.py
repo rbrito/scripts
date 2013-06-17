@@ -85,6 +85,9 @@ def keep_strategy():
 
 
 def main():
+    """
+    The real simulations.
+    """
     n = 10000
 
     successes = 0.0
