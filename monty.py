@@ -73,7 +73,7 @@ def keep_strategy():
     Performs a trial of the "keep doors strategy".  We return 1 if the
     participant won the prize and 0 otherwise.
     """
-    doors, prize_pos = init_doors()
+    doors, _ = init_doors()
 
     choice = first_participant_choice()
     # The participant simply sticks to his choice, regardless of what Monty
@@ -91,13 +91,13 @@ def main():
     n = 10000
 
     successes = 0.0
-    for i in range(n):
+    for _ in range(n):
         successes += switch_strategy()
     print("After %d trials with the switch doors strategy,"
           " the observed frequency of success was %f." % (n, successes/n))
 
     successes = 0.0
-    for i in range(n):
+    for _ in range(n):
         successes += keep_strategy()
     print("After %d trials with the keep doors strategy,"
           " the observed frequency of success was %f." % (n, successes/n))
