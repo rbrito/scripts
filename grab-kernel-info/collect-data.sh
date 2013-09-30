@@ -1,4 +1,15 @@
 #!/bin/sh
+#
+# Script to automate collection of hardware data for debugging the Linux
+# kernel.
+#
+# I use this whenever kernel hackers ask me for information to be supplied
+# to bugzilla.kernel.org, since it makes things easier for a non-technical
+# person like me.
+#
+# Author: Rogério Theodoro de Brito <rbrito@ime.usp.br>
+#
+
 
 DATE=$(date +%s)
 KVER=$(uname -r)
