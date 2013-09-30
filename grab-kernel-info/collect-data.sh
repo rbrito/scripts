@@ -8,11 +8,12 @@ mkdir $DIR
 cd $DIR
 
 cp /boot/config-$KVER		.
+cp /var/log/Xorg.0.log		.
+
 cp /proc/cpuinfo		proc-cpuinfo.txt
 cp /proc/interrupts		proc-interrupts.txt
 cp /proc/iomem			proc-iomem.txt
 cp /proc/ioports		proc-ioports.txt
-cp /var/log/Xorg.0.log		.
 
 uname -a			> uname-a.txt
 dmesg -s $((128 * 1024))	> $DATE-dmesg-$KVER.log
