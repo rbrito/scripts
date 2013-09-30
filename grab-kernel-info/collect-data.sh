@@ -23,6 +23,7 @@ dmidecode			> dmidecode.txt
 lspci -v			> lspci-v.txt
 lspci -vvxx			> lspci-vvxx.txt
 lspci -vx			> lspci-vx.txt
+lspci -n			> lspci-n.txt
 lspci				> lspci.txt
 lsusb				> lsusb.txt
 lsmod				> lsmod.txt
