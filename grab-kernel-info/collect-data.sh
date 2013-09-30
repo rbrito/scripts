@@ -2,7 +2,8 @@
 
 DATE=$(date +%s)
 KVER=$(uname -r)
-DIR=$DATE-linux-$KVER
+MACH=$(uname -n)
+DIR=$MACH-$DATE-linux-$KVER
 mkdir $DIR
 cd $DIR
 
