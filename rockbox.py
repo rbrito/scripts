@@ -43,7 +43,7 @@ class rockbox(object):
         for row in rows[2:]:  # by inspection, we want rows[2:]
             cells = row.find_all('td')
 
-            # Columns of interest
+            # Columns of interest, all determined by inspection
             info = {
                 'name': cells[1].a.text,
                 'link': self.url + '/' + cells[4].a['href'],
