@@ -15,8 +15,8 @@ def problematic_block(lba, first_part_sec, sec_size, blk_size):
     181644380
     >>>
     """
-    
-    return (lba - first_part_sec)*sec_size//blk_size
+
+    return (lba - first_part_sec) * sec_size // blk_size
 
     # /home/rbrito/videos/Lectures/coursera/videos/COMPLETED/comnetworks-002/05_Week_5-_Routing/09_5-9_Hierarchical_Routing.mp4
     # dd if=/dev/zero of=/dev/sda2 bs=4096 count=1 seek=181644380
