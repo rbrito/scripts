@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import re
-import subprocess
+from subprocess import (call, PIPE)
+
 
 def problematic_block(lba, first_part_sec, sec_size, blk_size):
     """Given the number (LBA) of a problematic sector on a disk, the number of
@@ -13,7 +14,7 @@ def problematic_block(lba, first_part_sec, sec_size, blk_size):
     output of SMART checking tools, like `skdump` or `smartctl`.
 
     Example for a regular ext4 filesystem on a disk with 512-byte sectors:
-    
+
     >>> problematic_block(1453654754, 499712, 512, 4096)
     181644380
     >>>
@@ -38,45 +39,44 @@ def debugfs_discover_filename(blocknum, devnode):
     in an ext2/3/4 filesystem are affected by the problematic block given by
     blocknum.
     """
-    p1 = subprocess.call(['debugfs',
-                          '-R',
-                          'testb',
-                          '{0}'.format(blocknum),
-                          '{0}'.format(devnode)], stdout=subprocess.PIPE)
-    stdout, stderr = p1.communicate()
+    p1 = call(['debugfs',
+               '-R',
+               'testb',
+               '{0}'.format(blocknum),
+               '{0}'.format(devnode)], stdout=PIPE)
+    stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
 
-    if len(lines) != 1: # this is not really expected
+    if len(lines) != 1:  # this is not really expected
         raise Exception('Foo barred.')
 
-    m = re.search('not in use$', lines[0])
-    if not m: # fortunate case: not in use:
+    mobj = re.search('not in use$', lines[0])
+    if mobj is None:  # fortunate case: not in use
         return None
 
-    p1 = subprocess.call(['debugfs',
-                          '-R',
-                          'icheck',
-                          '{0}'.format(blocknum),
-                          '{0}'.format(devnode)], stdout=subprocess.PIPE)
-    stdout, stderr = p1.communicate()
+    p1 = call(['debugfs',
+               '-R',
+               'icheck',
+               '{0}'.format(blocknum),
+               '{0}'.format(devnode)], stdout=PIPE)
+    stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
 
-    if len(lines) != 2: #this is not really expected
+    if len(lines) != 2:  # this is not really expected
         raise Exception('Foo barred.')
 
-    m = re.search('\s+(\d+)$', lines[1])
-    if not m:
+    mobj = re.search(r'\s+(\d+)$', lines[1])
+    if mobj is None:
         raise Exception('Foo barred.')
 
-
-    p1 = subprocess.call(['debugfs',
-                          '-R',
-                          'ncheck',
-                          '{0}'.format(m.group(1)), # there may be multiple inodes?
-                          '{0}'.format(devnode)], stdout=subprocess.PIPE)
-    stdout, stderr = p1.communicate()
+    p1 = call(['debugfs',
+               '-R',
+               'ncheck',
+               '{0}'.format(mobj.group(1)),  # there may be multiple inodes?
+               '{0}'.format(devnode)], stdout=PIPE)
+    stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
 
