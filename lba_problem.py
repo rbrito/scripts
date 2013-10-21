@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import re
+import subprocess
+
 def problematic_block(lba, first_part_sec, sec_size, blk_size):
     """Given the number (LBA) of a problematic sector on a disk, the number of
     the first sector of the partition that contains the LBA, the sector size
@@ -35,7 +38,55 @@ def debugfs_discover_filename(blocknum, devnode):
     in an ext2/3/4 filesystem are affected by the problematic block given by
     blocknum.
     """
-    pass
+    p1 = subprocess.call(['debugfs',
+                          '-R',
+                          'testb',
+                          '{0}'.format(blocknum),
+                          '{0}'.format(devnode)], stdout=subprocess.PIPE)
+    stdout, stderr = p1.communicate()
+    p1.stdout.close()
+    lines = stdout.split('\n')
+
+    if len(lines) != 1: # this is not really expected
+        raise Exception('Foo barred.')
+
+    m = re.search('not in use$', lines[0])
+    if not m: # fortunate case: not in use:
+        return None
+
+    p1 = subprocess.call(['debugfs',
+                          '-R',
+                          'icheck',
+                          '{0}'.format(blocknum),
+                          '{0}'.format(devnode)], stdout=subprocess.PIPE)
+    stdout, stderr = p1.communicate()
+    p1.stdout.close()
+    lines = stdout.split('\n')
+
+    if len(lines) != 2: #this is not really expected
+        raise Exception('Foo barred.')
+
+    m = re.search('\s+(\d+)$', lines[1])
+    if not m:
+        raise Exception('Foo barred.')
+
+
+    p1 = subprocess.call(['debugfs',
+                          '-R',
+                          'ncheck',
+                          '{0}'.format(m.group(1)), # there may be multiple inodes?
+                          '{0}'.format(devnode)], stdout=subprocess.PIPE)
+    stdout, stderr = p1.communicate()
+    p1.stdout.close()
+    lines = stdout.split('\n')
+
+    result = []
+    for line in lines[1:]:
+        m = re.search('^\d+\t(.*)?')
+        if m:
+            result.append(m.group(1))
+
+    return result
 
     # /home/rbrito/videos/Lectures/coursera/videos/COMPLETED/comnetworks-002/05_Week_5-_Routing/09_5-9_Hierarchical_Routing.mp4
     # dd if=/dev/zero of=/dev/sda2 bs=4096 count=1 seek=181644380
