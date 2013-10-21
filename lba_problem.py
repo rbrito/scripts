@@ -82,9 +82,9 @@ def debugfs_discover_filename(blocknum, devnode):
 
     result = []
     for line in lines[1:]:
-        m = re.search('^\d+\t(.*)?')
-        if m:
-            result.append(m.group(1))
+        mobj = re.search(r'^\d+\t(.*)?', line)
+        if mobj is not None:
+            result.append(mobj.group(1))
 
     return result
 
