@@ -18,5 +18,24 @@ def problematic_block(lba, first_part_sec, sec_size, blk_size):
 
     return (lba - first_part_sec) * sec_size // blk_size
 
+
+def debugfs_discover_filename(blocknum, devnode):
+    """Given a block number blocknum of an ext2/3/4 filesystem specified by
+    devnode, try to find the name of the file in that filesystem that
+    contains that block, if any.
+
+    We assume that blocknum is a valid block number for the device devnode.
+
+    We return None if the block is not associated with any file or return a
+    list of strings containing the full path (absolute) for files that
+    contain such block. Exception: the journal of the filesystem is
+    represented as an empty string.
+
+    One (unfortunate) use case of this function is to discover which files
+    in an ext2/3/4 filesystem are affected by the problematic block given by
+    blocknum.
+    """
+    pass
+
     # /home/rbrito/videos/Lectures/coursera/videos/COMPLETED/comnetworks-002/05_Week_5-_Routing/09_5-9_Hierarchical_Routing.mp4
     # dd if=/dev/zero of=/dev/sda2 bs=4096 count=1 seek=181644380
