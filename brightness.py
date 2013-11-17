@@ -16,7 +16,14 @@ References:
 """
 
 if __name__ == '__main__':
+    import sys
+
     import dbus
+
+    if len(sys.argv) == 1:
+        percentage = 40
+    else:
+        percentage = int(sys.argv[1])
 
     session_bus = dbus.SessionBus()
     proxy = session_bus.get_object("org.gnome.SettingsDaemon",
@@ -24,4 +31,4 @@ if __name__ == '__main__':
     dbus_int = dbus.Interface(proxy, "org.gnome.SettingsDaemon.Power.Screen")
     set_percentage = dbus_int.get_dbus_method("SetPercentage")
 
-    set_percentage(40)
+    set_percentage(percentage)
