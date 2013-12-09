@@ -34,3 +34,37 @@ ethtool -s eth0 wol d
 iwpriv wlan0 set_power 7
 
 iwconfig wlan0 power timeout 500ms
+
+echo 'VM writeback timeout'
+echo 1500 > '/proc/sys/vm/dirty_writeback_centisecs';
+
+echo 'NMI watchdog should be turned off'
+echo 0 > '/proc/sys/kernel/nmi_watchdog'
+
+echo 'Enable Audio codec power management'
+echo 1 > '/sys/module/snd_hda_intel/parameters/power_save'
+
+echo 'Enable SATA link power Management'
+for i in /sys/class/scsi_host/*/link_power_management_policy; do
+    echo min_power > $i
+done
+
+echo 'Autosuspend for USB devices'
+for i in /sys/bus/usb/devices/*/power/control; do
+    echo auto > $i
+done
+
+echo 'Runtime PM for PCI Devices'
+for i in /sys/bus/pci/devices/*/power/control; do
+    echo auto > $i
+done
+
+echo 'Wake-on-lan status for device eth0'
+ethtool -s eth0 wol d
+
+echo 'Using ondemand cpufreq governor'
+
+/sbin/modprobe cpufreq_ondemand > /dev/null 2>&1
+for i in /sys/devices/system/cpu/*/cpufreq/scaling_governor; do
+    echo ondemand > $i
+done
