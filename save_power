@@ -1,52 +1,24 @@
-#!/bin/bash
+#!/bin/sh
 
-#echo 5 > /proc/sys/vm/laptop_mode
+check_and_set () {
+    if [ -e $1 ]; then
+        echo $2 > $1;
+    fi
+}
+
+echo 'Disable NMI watchdog'
 echo 0 > /proc/sys/kernel/nmi_watchdog
-#echo 1 > /sys/module/snd_ac97_codec/parameters/power_save
-echo 1500 > /proc/sys/vm/dirty_writeback_centisecs
-
-# rmmod uhci_hcd
-# rmmod ohci_hcd
-
-for i in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo ondemand > $i; done
-for i in /sys/bus/*/devices/*/power/autosuspend; do echo 1 > $i; done
-for i in /sys/bus/*/devices/*/power/control; do echo auto > $i; done
-for i in /sys/class/scsi_host/*/link_power_management_policy; do echo min_power > $i; done
-
-echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/powersave_bias
-echo 0 > /sys/devices/system/cpu/cpufreq/ondemand/ignore_nice_load
-
-amixer set Mic mute nocap
-echo Y > /sys/module/snd_hda_intel/parameters/power_save_controller
-echo 1 > /sys/module/snd_hda_intel/parameters/power_save
-
-# Tune the scheduler for saving power
-echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
-echo 2 > /sys/devices/system/cpu/sched_smt_power_savings
-
-# -B 1 spins down and up all the time
-hdparm -B 128 -M 128 /dev/sda
-
-# Disable wake-on lan
-ethtool -s eth0 wol d
-
-# For intel wireless stuff, to save power
-iwpriv wlan0 set_power 7
-
-iwconfig wlan0 power timeout 500ms
 
 echo 'VM writeback timeout'
-echo 1500 > '/proc/sys/vm/dirty_writeback_centisecs';
+echo 1500 > /proc/sys/vm/dirty_writeback_centisecs
 
-echo 'NMI watchdog should be turned off'
-echo 0 > '/proc/sys/kernel/nmi_watchdog'
+# echo 5 > /proc/sys/vm/laptop_mode
+# rmmod uhci_hcd
+# rmmod ohci_hcd
+# amixer set Mic mute nocap
 
-echo 'Enable Audio codec power management'
-echo 1 > '/sys/module/snd_hda_intel/parameters/power_save'
-
-echo 'Enable SATA link power Management'
-for i in /sys/class/scsi_host/*/link_power_management_policy; do
-    echo min_power > $i
+for i in /sys/bus/*/devices/*/power/autosuspend; do
+    echo 1 > $i
 done
 
 echo 'Autosuspend for USB devices'
@@ -54,17 +26,50 @@ for i in /sys/bus/usb/devices/*/power/control; do
     echo auto > $i
 done
 
-echo 'Runtime PM for PCI Devices'
+echo 'Autosuspend for PCI Devices'
 for i in /sys/bus/pci/devices/*/power/control; do
     echo auto > $i
 done
 
+echo 'Enable SATA link power Management'
+for i in /sys/class/scsi_host/*/link_power_management_policy; do
+    echo min_power > $i
+done
+
+echo 'Autosuspend for AC97 audio devices'
+check_and_set /sys/module/snd_ac97_codec/parameters/power_save 1
+
+echo 'Autosuspend for HDA audio devices'
+check_and_set /sys/module/snd_hda_intel/parameters/power_save_controller Y
+check_and_set /sys/module/snd_hda_intel/parameters/power_save 1
+
+echo 'Tune the scheduler for saving power on hyperthreading systems'
+check_and_set /sys/devices/system/cpu/sched_mc_power_savings 2
+check_and_set /sys/devices/system/cpu/sched_smt_power_savings 2
+
+# -B 1 spins down and up all the time
+echo 'Set APM level to low'
+hdparm -B 128 /dev/sda > /dev/null
+
+echo 'Set acoustic level to quiet'
+hdparm -M 128 /dev/sda > /dev/null
+
+echo 'Disable wake-on lan'
+ethtool -s eth0 wol d
+
+echo 'For intel wireless stuff, to save power'
+iwpriv wlan0 set_power 7 2>/dev/null || echo 'Failed to enable powersaving for wifi'
+iwconfig wlan0 power timeout 500ms 2>/dev/null || echo 'Failed to enable powersaving for wifi'
+
 echo 'Wake-on-lan status for device eth0'
 ethtool -s eth0 wol d
 
-echo 'Using ondemand cpufreq governor'
-
+echo 'Enable ondemand cpufreq governor'
 /sbin/modprobe cpufreq_ondemand > /dev/null 2>&1
 for i in /sys/devices/system/cpu/*/cpufreq/scaling_governor; do
-    echo ondemand > $i
+    check_and_set $i ondemand 2>/dev/null
 done
+
+echo 'Enable aggressive power savings for ondemand governor'
+check_and_set /sys/devices/system/cpu/cpufreq/ondemand/powersave_bias 1
+check_and_set /sys/devices/system/cpu/cpufreq/ondemand/ignore_nice_load 0
