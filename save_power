@@ -17,9 +17,8 @@ echo 1500 > /proc/sys/vm/dirty_writeback_centisecs
 # rmmod ohci_hcd
 # amixer set Mic mute nocap
 
-for i in /sys/bus/*/devices/*/power/autosuspend; do
-    echo 1 > $i
-done
+echo 'Enable powersave for PCIe ASPM'
+echo powersave > /sys/module/pcie_aspm/parameters/policy
 
 echo 'Autosuspend for USB devices'
 for i in /sys/bus/usb/devices/*/power/control; do
@@ -49,20 +48,17 @@ check_and_set /sys/devices/system/cpu/sched_smt_power_savings 2
 
 # -B 1 spins down and up all the time
 echo 'Set APM level to low'
-hdparm -B 128 /dev/sda > /dev/null
+hdparm -B 128 /dev/sda > /dev/null 2>/dev/null || echo 'Could not set APM level'
 
 echo 'Set acoustic level to quiet'
-hdparm -M 128 /dev/sda > /dev/null
+hdparm -M 128 /dev/sda > /dev/null 2>/dev/null || echo 'Could not set acoustic level'
 
 echo 'Disable wake-on lan'
-ethtool -s eth0 wol d
+ethtool -s eth0 wol d 2>/dev/null || echo 'Could not disable wake-on-lan'
 
 echo 'For intel wireless stuff, to save power'
 iwpriv wlan0 set_power 7 2>/dev/null || echo 'Failed to enable powersaving for wifi'
 iwconfig wlan0 power timeout 500ms 2>/dev/null || echo 'Failed to enable powersaving for wifi'
-
-echo 'Wake-on-lan status for device eth0'
-ethtool -s eth0 wol d
 
 echo 'Enable ondemand cpufreq governor'
 /sbin/modprobe cpufreq_ondemand > /dev/null 2>&1
