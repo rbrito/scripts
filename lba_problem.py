@@ -4,7 +4,7 @@ import re
 from subprocess import (call, PIPE)
 
 
-def problematic_block(lba, first_part_sec, sec_size, blk_size):
+def problematic_block(lba, first_part_sec, sec_size=512, blk_size=4096):
     """Given the number (LBA) of a problematic sector on a disk, the number of
     the first sector of the partition that contains the LBA, the sector size
     of the disk and the block size of the filesystem, return the number of
