@@ -2,6 +2,7 @@
 
 import fnmatch
 import os
+import subprocess
 
 EXT = 'flv'
 
@@ -16,12 +17,17 @@ dir_entries = os.walk('.').next()
 
 our_files = sorted(fnmatch.filter(dir_entries[2], '*.' + EXT))
 
-os.system(
-    ' '.join(
-        [
-            "mkvmerge --chapters chaps.txt",
-            "-o ../%s.mkv" % our_basename,
-            ' + '.join(our_files)
-            ]
-        )
-    )
+
+parameters = ['mkvmerge',
+              '--chapters', 'chaps.txt',
+              '-o', '../%s.mkv' % our_basename,
+              ]
+
+parameters.append(our_files[0])
+for f in our_files[1:]:
+    parameters.append('+')
+    parameters.append(f)
+
+print parameters
+
+subprocess.call(parameters)
