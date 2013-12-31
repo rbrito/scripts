@@ -37,8 +37,6 @@ import dateutil.parser
 import re
 import sys
 
-from datetime import datetime
-
 
 def time_to_timestamp(position):
     return float(dateutil.parser.parse('1970-01-01T%s UTC' %
