@@ -42,8 +42,8 @@ def debugfs_discover_filename(blocknum, devnode):
     p1 = call(['debugfs',
                '-R',
                'testb',
-               '{0}'.format(blocknum),
-               '{0}'.format(devnode)], stdout=PIPE)
+               str(blocknum),
+               devnode], stdout=PIPE)
     stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
@@ -58,8 +58,8 @@ def debugfs_discover_filename(blocknum, devnode):
     p1 = call(['debugfs',
                '-R',
                'icheck',
-               '{0}'.format(blocknum),
-               '{0}'.format(devnode)], stdout=PIPE)
+               str(blocknum),
+               devnode], stdout=PIPE)
     stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
@@ -74,8 +74,8 @@ def debugfs_discover_filename(blocknum, devnode):
     p1 = call(['debugfs',
                '-R',
                'ncheck',
-               '{0}'.format(mobj.group(1)),  # there may be multiple inodes?
-               '{0}'.format(devnode)], stdout=PIPE)
+               mobj.group(1),  # there may be multiple inodes?
+               devnode], stdout=PIPE)
     stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
