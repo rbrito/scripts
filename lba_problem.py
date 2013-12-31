@@ -10,8 +10,9 @@ def problematic_block(lba, first_part_sec, sec_size=512, blk_size=4096):
     of the disk and the block size of the filesystem, return the number of
     the filesystem block that contains the problematic sector.
 
-    The number of the sector is usually found in a dmesg log or on the
-    output of SMART checking tools, like `skdump` or `smartctl`.
+    The number of the sector (the lba argument to this function) is usually
+    found in a dmesg log or on the output of SMART checking tools, like
+    `skdump` or `smartctl`.
 
     Example for a regular ext4 filesystem on a disk with 512-byte sectors:
 
