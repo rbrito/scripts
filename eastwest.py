@@ -14,6 +14,7 @@ def Count(famno, n, k):
     else:
         return IntegerPtns(n, k)
 
+
 def CountCycles(perm):
     c = 0
     pr = -perm
@@ -28,6 +29,7 @@ def CountCycles(perm):
                 pr[i] = abs(pr[i])
                 i = pr[i]
 
+
 def CountOrderedPtns(n, k):
     if n < 0 or k < 1:
         return 0
@@ -36,6 +38,7 @@ def CountOrderedPtns(n, k):
     else:
         return CountOrderedPtns(n, k-1) + CountOrderedPtns(n-1, k)
 
+
 def CountPartitions(n, k):
     if n < 1 or k < 1 or n < k:
         return 0
@@ -43,6 +46,7 @@ def CountPartitions(n, k):
         return 1
     else:
         return CountPartitions(n-1, k-1) + CountPartitions(n-k, k)
+
 
 def CountRuns(n, k):
     if n < 1 or k < 1:
@@ -54,6 +58,7 @@ def CountRuns(n, k):
     else:
         return k*CountRuns(n-1, k) + (n-k+1)*CountRuns(n-1, k-1)
 
+
 def IntegerPtns(n, k):
     if n < 1 or k < 1 or n < k:
         return 0
@@ -61,6 +66,7 @@ def IntegerPtns(n, k):
         return 1
     else:
         return IntegerPtns(n-1, k-1) + IntegerPtns(n-k, k)
+
 
 def List(famno, n, k):
     if famno == 1:
@@ -78,6 +84,7 @@ def List(famno, n, k):
     else:
         return ListIntegerPtns(n, k)
 
+
 def ListIntegerPtns(n, k):
     # XXX: Should be memoized (original has: "option remember")
     # eastop = y -> applyop(t->t+1, 1, y)
@@ -90,4 +97,3 @@ def ListIntegerPtns(n, k):
         east = ListIntegerPtns(n-1, k-1)
         west = ListIntegerPtns(n-k, k)
         return (op(map, eastop, east), op(map(westop, west, k)))
-
