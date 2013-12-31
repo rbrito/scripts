@@ -126,6 +126,3 @@ def debugfs_discover_filename(blocknum, devnode):
             result.append(mobj.group(1))
 
     return result
-
-    # /home/rbrito/videos/Lectures/coursera/videos/COMPLETED/comnetworks-002/05_Week_5-_Routing/09_5-9_Hierarchical_Routing.mp4
-    # dd if=/dev/zero of=/dev/sda2 bs=4096 count=1 seek=181644380
