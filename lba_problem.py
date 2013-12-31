@@ -1,5 +1,40 @@
 #!/usr/bin/env python
 
+"""Small program to assist with the automation of the steps listed in the
+[Bad Blocks HOWTO][1] for reallocating damaged sectors of a hard drive
+(after some unfortunate events).
+
+[1]: http://smartmontools.sourceforge.net/badblockhowto.html
+
+Unfortunately, the method that I have so far is to use a pipe with programs
+from the e2fsprogs package and parse its output, which is admittedly not a
+robust solution to the problem.
+
+Given the number (LBA) of a problematic sector on a disk, the number of
+the first sector of the partition that contains the LBA, the sector size
+of the disk and the block size of the filesystem, we try to determine if
+there is any file that may be damaged, and, if there is, then what they are.
+
+The number of the sector is usually found in a dmesg log or on the
+output of SMART checking tools, like `skdump` or `smartctl`.
+
+You can, after such an unfortunate event, decide what to do (Copy whatever
+is left of the file with problems? Redownload it? Recover from backups?)
+and, then, issue a write command specifically to that sector, so that you
+can force a reallocation of the sector to some spare sectors that the drive
+may have (hopefully, it has some) with:
+
+    dd if=/dev/zero of=/dev/sda2 bs=4096 count=1 seek=<B>
+
+where B is the block number returned by the function `problematic_block`.
+Of course, adjust /dev/sda2 to the appropriate (raw) block device and the
+block site (bs parameter to dd) with the block size of your filesystem.
+
+The detection of the names of filesystems only work with ext2/3/4
+filesystems (since we depend on debugfs to find the names of the potentially
+damaged files).
+"""
+
 import re
 from subprocess import (call, PIPE)
 
