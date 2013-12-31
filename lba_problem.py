@@ -78,11 +78,12 @@ def debugfs_discover_filename(blocknum, devnode):
     in an ext2/3/4 filesystem are affected by the problematic block given by
     blocknum.
     """
-    p1 = call(['debugfs',
-               '-R',
-               'testb',
-               str(blocknum),
-               devnode], stdout=PIPE)
+
+    basic_cmd = ['debugfs', '-R']
+
+    p1 = call(basic_cmd + ['testb', str(blocknum), devnode],
+              stdout=PIPE)
+
     stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
@@ -94,11 +95,9 @@ def debugfs_discover_filename(blocknum, devnode):
     if mobj is None:  # fortunate case: not in use
         return None
 
-    p1 = call(['debugfs',
-               '-R',
-               'icheck',
-               str(blocknum),
-               devnode], stdout=PIPE)
+    p1 = call(basic_cmd + ['icheck', str(blocknum), devnode],
+              stdout=PIPE)
+
     stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
@@ -110,11 +109,10 @@ def debugfs_discover_filename(blocknum, devnode):
     if mobj is None:
         raise Exception('Foo barred.')
 
-    p1 = call(['debugfs',
-               '-R',
-               'ncheck',
-               mobj.group(1),  # there may be multiple inodes?
-               devnode], stdout=PIPE)
+    # FIXME: there may be multiple inodes?
+    p1 = call(basic_cmd + ['ncheck', mobj.group(1), devnode],
+              stdout=PIPE)
+
     stdout, _ = p1.communicate()
     p1.stdout.close()
     lines = stdout.split('\n')
