@@ -1,5 +1,4 @@
-scripts
-=======
+# Scripts
 
 These are some random scripts that I have created over the time.
 I'm putting them here because some people asked me to have small snippets.
