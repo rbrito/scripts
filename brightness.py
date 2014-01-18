@@ -55,7 +55,7 @@ if __name__ == '__main__':
     desktop = os.getenv('DESKTOP_SESSION', 'gnome')
 
     if desktop not in dbus_stuff:
-        print("Implemented desktop")
+        print("Unimplemented desktop.")
         sys.exit(1)
 
     set_brightness(desktop, percentage)
