@@ -15,22 +15,20 @@ References:
     http://www.devtech.com/inhibitapplet
 """
 
-dbus_stuff = {}
-
-dbus_stuff["gnome"] = {
-    "service": "org.gnome.SettingsDaemon",
-    "path": "/org/gnome/SettingsDaemon/Power",
-    "interface": "org.gnome.SettingsDaemon.Power.Screen",
-    "method": "SetPercentage"
+dbus_stuff = {
+    'gnome': {
+        "service": "org.gnome.SettingsDaemon",
+        "path": "/org/gnome/SettingsDaemon/Power",
+        "interface": "org.gnome.SettingsDaemon.Power.Screen",
+        "method": "SetPercentage"
+    },
+    'mate': {
+        "service": "org.mate.PowerManager",
+        "path": "/org/mate/PowerManager/Backlight",
+        "interface": "org.mate.PowerManager.Backlight",
+        "method": "SetBrightness"
+    }
 }
-
-dbus_stuff["mate"] = {
-    "service": "org.mate.PowerManager",
-    "path": "/org/mate/PowerManager/Backlight",
-    "interface": "org.mate.PowerManager.Backlight",
-    "method": "SetBrightness"
-}
-
 
 def set_brightness(desktop):
     what = dbus_stuff[desktop]
