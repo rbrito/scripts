@@ -23,7 +23,16 @@ def set_for_gnome(session_bus):
     return set_percentage
 
 
+def set_for_mate(session_bus):
+    proxy = session_bus.get_object("org.mate.PowerManager",
+                                   "/org/mate/PowerManager/Backlight")
+    dbus_int = dbus.Interface(proxy, "org.mate.PowerManager.Backlight")
+    set_percentage = dbus_int.get_dbus_method("SetBrightness")
+    return set_percentage
+
+
 if __name__ == '__main__':
+    import os
     import sys
 
     import dbus
@@ -33,6 +42,15 @@ if __name__ == '__main__':
     else:
         percentage = int(sys.argv[1])
 
+    desktop = os.getenv('DESKTOP_SESSION', 'gnome')
     session_bus = dbus.SessionBus()
+
+    if desktop == 'mate':
+        set_percentage = set_for_mate(session_bus)
+    elif desktop == 'gnome':
+        set_percentage = set_for_gnome(session_bus)
+    else:
+        print("Implemented desktop")
+        sys.exit(1)
 
     set_percentage(percentage)
