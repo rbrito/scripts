@@ -15,19 +15,31 @@ References:
     http://www.devtech.com/inhibitapplet
 """
 
-def set_for_gnome(session_bus):
-    proxy = session_bus.get_object("org.gnome.SettingsDaemon",
-                                   "/org/gnome/SettingsDaemon/Power")
-    dbus_int = dbus.Interface(proxy, "org.gnome.SettingsDaemon.Power.Screen")
-    set_percentage = dbus_int.get_dbus_method("SetPercentage")
-    return set_percentage
+dbus_stuff = {}
+
+dbus_stuff["gnome"] = {
+    "service": "org.gnome.SettingsDaemon",
+    "path": "/org/gnome/SettingsDaemon/Power",
+    "interface": "org.gnome.SettingsDaemon.Power.Screen",
+    "method": "SetPercentage"
+}
+
+dbus_stuff["mate"] = {
+    "service": "org.mate.PowerManager",
+    "path": "/org/mate/PowerManager/Backlight",
+    "interface": "org.mate.PowerManager.Backlight",
+    "method": "SetBrightness"
+}
 
 
-def set_for_mate(session_bus):
-    proxy = session_bus.get_object("org.mate.PowerManager",
-                                   "/org/mate/PowerManager/Backlight")
-    dbus_int = dbus.Interface(proxy, "org.mate.PowerManager.Backlight")
-    set_percentage = dbus_int.get_dbus_method("SetBrightness")
+def set_brightness(desktop):
+    what = dbus_stuff[desktop]
+
+    session_bus = dbus.SessionBus()
+    proxy = session_bus.get_object(what['service'], what['path'])
+    dbus_int = dbus.Interface(proxy, what['interface'])
+    set_percentage = dbus_int.get_dbus_method(what['method'])
+
     return set_percentage
 
 
@@ -43,14 +55,10 @@ if __name__ == '__main__':
         percentage = int(sys.argv[1])
 
     desktop = os.getenv('DESKTOP_SESSION', 'gnome')
-    session_bus = dbus.SessionBus()
 
-    if desktop == 'mate':
-        set_percentage = set_for_mate(session_bus)
-    elif desktop == 'gnome':
-        set_percentage = set_for_gnome(session_bus)
-    else:
+    if desktop not in dbus_stuff:
         print("Implemented desktop")
         sys.exit(1)
 
+    set_percentage = set_brightness(desktop)
     set_percentage(percentage)
