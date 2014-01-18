@@ -15,7 +15,7 @@ References:
     http://www.devtech.com/inhibitapplet
 """
 
-dbus_stuff = {
+dbus_properties = {
     'gnome': {
         "service": "org.gnome.SettingsDaemon",
         "path": "/org/gnome/SettingsDaemon/Power",
@@ -31,12 +31,12 @@ dbus_stuff = {
 }
 
 def set_brightness(desktop, percentage):
-    what = dbus_stuff[desktop]
+    properties = dbus_properties[desktop]
 
     session_bus = dbus.SessionBus()
-    proxy = session_bus.get_object(what['service'], what['path'])
-    dbus_int = dbus.Interface(proxy, what['interface'])
-    set_percentage = dbus_int.get_dbus_method(what['method'])
+    proxy = session_bus.get_object(properties['service'], properties['path'])
+    dbus_int = dbus.Interface(proxy, properties['interface'])
+    set_percentage = dbus_int.get_dbus_method(properties['method'])
 
     set_percentage(percentage)
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     desktop = os.getenv('DESKTOP_SESSION', 'gnome')
 
-    if desktop not in dbus_stuff:
+    if desktop not in dbus_properties:
         print("Unimplemented desktop.")
         sys.exit(1)
 
