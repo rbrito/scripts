@@ -30,7 +30,7 @@ dbus_stuff = {
     }
 }
 
-def set_brightness(desktop):
+def set_brightness(desktop, percentage):
     what = dbus_stuff[desktop]
 
     session_bus = dbus.SessionBus()
@@ -38,7 +38,7 @@ def set_brightness(desktop):
     dbus_int = dbus.Interface(proxy, what['interface'])
     set_percentage = dbus_int.get_dbus_method(what['method'])
 
-    return set_percentage
+    set_percentage(percentage)
 
 
 if __name__ == '__main__':
@@ -58,5 +58,4 @@ if __name__ == '__main__':
         print("Implemented desktop")
         sys.exit(1)
 
-    set_percentage = set_brightness(desktop)
-    set_percentage(percentage)
+    set_brightness(desktop, percentage)
