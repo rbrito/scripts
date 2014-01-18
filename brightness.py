@@ -30,7 +30,14 @@ dbus_properties = {
     }
 }
 
+
 def set_brightness(desktop, percentage):
+    """
+    Given a string `desktop` representing the name of the current desktop
+    and an integer `percentage`, set the brightness of the monitor to
+    `percentage` via D-Bus methods.
+    """
+
     properties = dbus_properties[desktop]
 
     session_bus = dbus.SessionBus()
