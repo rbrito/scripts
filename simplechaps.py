@@ -4,7 +4,7 @@
 """
 simplechaps.py
 
-Copyright 2012, Rogério Theodoro de Brito <rbrito@ime.usp.br>
+Copyright 2012-2014, Rogério Theodoro de Brito <rbrito@ime.usp.br>
 
 Simple generator of chapter files suitable for use with mkvmerge when
 creating a concatenated file from multiple video files (think: shows taken
