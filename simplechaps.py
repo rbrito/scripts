@@ -48,8 +48,8 @@ EPOCH = time_to_timestamp('00:00:00')
 
 def timestamp_to_hour(stamp):
     stamp = float(stamp)
-    hh = int(stamp) / 3600
-    mm = (int(stamp) % 3600) / 60
+    hh = int(stamp) // 3600
+    mm = (int(stamp) % 3600) // 60
     ss = int(stamp) % 60
     uu = (stamp - int(stamp)) * 1000
     return '%02d:%02d:%02d.%03d' % (hh, mm, ss, uu)
@@ -65,8 +65,8 @@ def main():
     for i in range(0, len(lines), 2):
         normalized_name = lines[i+1].replace('_', ' ')
         normalized_name = re.sub('^\d+-', '', normalized_name)
-        print 'CHAPTER%02d=%s' % (i/2 + 1, timestamp_to_hour(cur_time))
-        print 'CHAPTER%02dNAME=%s' % (i/2 + 1, normalized_name)
+        print 'CHAPTER%02d=%s' % (i//2 + 1, timestamp_to_hour(cur_time))
+        print 'CHAPTER%02dNAME=%s' % (i//2 + 1, normalized_name)
         cur_time += time_to_timestamp(lines[i]) - EPOCH
 
 
