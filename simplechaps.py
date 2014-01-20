@@ -64,7 +64,7 @@ def main():
     cur_time = 0
     for i in range(0, len(lines), 2):
         normalized_name = lines[i+1].replace('_', ' ')
-        normalized_name = re.sub('^\d+-', '', normalized_name)
+        normalized_name = re.sub(r'^\d+-', '', normalized_name)
         print 'CHAPTER%02d=%s' % (i//2 + 1, timestamp_to_hour(cur_time))
         print 'CHAPTER%02dNAME=%s' % (i//2 + 1, normalized_name)
         cur_time += time_to_timestamp(lines[i]) - EPOCH
