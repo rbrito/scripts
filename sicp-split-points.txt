@@ -1,0 +1,20 @@
+Lecture-1a: 0, 1670, 3382
+Lecture-1b: 0, 1022, 2215
+Lecture-2a: 0, 1370, 2592
+Lecture-2b: 0, 1078, 2460, 3392
+Lecture-3a: 0, 1700, 2925
+Lecture-3b: 0, 1750
+Lecture-4a: 0, 1438, 2795
+Lecture-4b: 0, 1563, 2670
+Lecture-5a: 0, 1340, 2825
+Lecture-5b: 0, 1870, 2760
+Lecture-6a: 0, 1480, 2575
+Lecture-6b: 0, 850, 2015
+Lecture-7a: 0, 2185, 3350
+Lecture-7b: 0, 1082, 2420
+Lecture-8a: 0, 1240
+Lecture-8b: 0, 1374, 2896
+Lecture-9a: 0, 1711, 3090
+Lecture-9b: 0, 1167, 2290, 3152
+Lecture-10a: 0, 1633
+Lecture-10b: 0, 1073, 2458
