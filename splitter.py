@@ -20,7 +20,7 @@ foos = [f(x) for x in s]
 #ffmpeg_opts = "-map_metadata -1 -vf hqdn3d=7:7:5:5 -crf 25 -c:a libfdk_aac -b:a 48k"
 
 ffmpeg_opts ={'avi': '-map_metadata -1 -c copy',
-              'mp4': '-map_metadata -1 -vf hqdn3d=7:7:5:5 -crf 25 -c:a libfdk_aac -b:a 56k'}
+              'mp4': '-map_metadata -1 -preset ultrafast -crf 25'}
 
 ext = 'mp4'
 
