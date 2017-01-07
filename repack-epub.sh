@@ -40,4 +40,4 @@ advzip -z3 "$NEWNAME"
 advzip -z4 "$NEWNAME"
 
 cd "$CURDIR"
-echo rm -rf "$WORKDIR"
+rm -rf "$WORKDIR"
