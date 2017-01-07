@@ -4,7 +4,7 @@
 
 # Note: mktemp instead of the other insecure alternatives
 WORKDIR=$(mktemp -d)
-
+CURDIR=$PWD
 ORIGDIR=$(dirname $1)
 
 cd $WORKDIR
@@ -36,3 +36,5 @@ zip -r -D -X -9 "$NEWNAME" mimetype META-INF OEBPS
 # Optimize ZIPs
 advzip -z3 "$NEWNAME"
 advzip -z4 "$NEWNAME"
+
+cd $CURDIR
