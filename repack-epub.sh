@@ -5,6 +5,8 @@
 # Note: mktemp instead of the other insecure alternatives
 WORKDIR=$(mktemp -d)
 
+ORIGDIR=$(dirname $1)
+
 cd $WORKDIR
 unzip $1
 
