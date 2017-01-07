@@ -5,10 +5,12 @@
 # Note: mktemp instead of the other insecure alternatives
 WORKDIR="$(mktemp -d)"
 CURDIR="$PWD"
-ORIGDIR="$(dirname "$1")"
+REALPATH="$(realpath "$1")"
+ORIGDIR="$(dirname "$REALPATH")"
+ORIGNAME="$(basename "$REALPATH")"
 
 cd "$WORKDIR"
-unzip "$1"
+unzip "$REALPATH"
 
 # TODO: Sanity check: verify if we're at the top level of the epub
 
@@ -29,7 +31,7 @@ find . \( -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | xargs -0 jpgcrush
 find . \( -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | xargs -0 jhead -purejpg
 
 # Repack the epub. NOTE: The order and the options *ARE* important.
-NEWNAME="$ORIGDIR/${1%%epub}new.epub"
+NEWNAME="$ORIGDIR/${ORIGNAME%%epub}new.epub"
 
 zip -r -D -X -9 "$NEWNAME" mimetype META-INF OEBPS
 
