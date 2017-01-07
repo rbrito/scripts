@@ -3,12 +3,12 @@
 # FIXME: Quote everything for whitespace!
 
 # Note: mktemp instead of the other insecure alternatives
-WORKDIR=$(mktemp -d)
-CURDIR=$PWD
-ORIGDIR=$(dirname $1)
+WORKDIR="$(mktemp -d)"
+CURDIR="$PWD"
+ORIGDIR="$(dirname "$1")"
 
-cd $WORKDIR
-unzip $1
+cd "$WORKDIR"
+unzip "$1"
 
 # TODO: Sanity check: verify if we're at the top level of the epub
 
@@ -37,5 +37,5 @@ zip -r -D -X -9 "$NEWNAME" mimetype META-INF OEBPS
 advzip -z3 "$NEWNAME"
 advzip -z4 "$NEWNAME"
 
-cd $CURDIR
-echo rm -rf $WORKDIR
+cd "$CURDIR"
+echo rm -rf "$WORKDIR"
