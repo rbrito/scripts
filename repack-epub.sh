@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # FIXME: Quote everything for whitespace!
 
