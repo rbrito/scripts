@@ -12,7 +12,8 @@ unzip $1
 
 # TODO: Sanity check: verify if we're at the top level of the epub
 
-# Fix permissions
+# Fix permissions; I've seen them wrong when unzipping an epub and
+# they prevent all the next steps from being performed.
 find . -type d -print0 | xargs -0 chmod 755
 find . -type f -print0 | xargs -0 chmod 644
 
