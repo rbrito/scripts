@@ -32,3 +32,7 @@ find . \( -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | xargs -0 jhead -purejpg
 NEWNAME="$ORIGDIR/${1%%epub}new.epub"
 
 zip -r -D -X -9 "$NEWNAME" mimetype META-INF OEBPS
+
+# Optimize ZIPs
+advzip -z3 "$NEWNAME"
+advzip -z4 "$NEWNAME"
