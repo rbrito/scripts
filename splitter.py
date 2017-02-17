@@ -34,3 +34,4 @@ for foo in foos:
         else:
             print("ffmpeg -ss %s -i %s.avi %s %s-%d.%s" %
                   (l[i], name, ffmpeg_opts[ext], name, i+1, ext))
+    print()
