@@ -28,13 +28,13 @@ for foo in foos:
     l = foo[1:]
     n = len(l)
     for i in range(n):
-        if i < n-1:
+        if i < n - 1:
             # peculiarity of ffmpeg: you have to put both the start (-ss)
             # and end (-to) of the video right before the output file name;
             # otherwise, they don't do what we expect them to do.
             print("ffmpeg -i %s.avi %s -ss %s -to %s %s-%d.%s" %
-                  (name, ffmpeg_opts[ext], l[i], l[i+1], name, i+1, ext))
+                  (name, ffmpeg_opts[ext], l[i], l[i + 1], name, i + 1, ext))
         else:
             print("ffmpeg -ss %s -i %s.avi %s %s-%d.%s" %
-                  (l[i], name, ffmpeg_opts[ext], name, i+1, ext))
+                  (l[i], name, ffmpeg_opts[ext], name, i + 1, ext))
     print()
