@@ -4,7 +4,8 @@ from __future__ import print_function
 
 import re
 
-s = open('sicp-split-points.txt').readlines()
+with open('sicp-split-points.txt') as f:
+    s = f.readlines()
 
 def f(s):
     res = [x for x in re.split(r"[: ,\n]", s) if x != '']
