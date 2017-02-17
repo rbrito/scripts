@@ -7,12 +7,8 @@ import re
 s = open('sicp-split-points.txt').readlines()
 
 def f(s):
-    # res = filter(lambda x: x != '', re.split(r"[: ,\n]", s))
     res = [x for x in re.split(r"[: ,\n]", s) if x != '']
-    res2 = [res[0]]
-    #res2.extend(map(int, res[1:]))
-    res2.extend(list(map(int, res[1:])))
-    return res2
+    return res
 
 
 foos = [f(x) for x in s]
@@ -33,8 +29,8 @@ for foo in foos:
             # peculiarity of ffmpeg: you have to put both the start (-ss)
             # and end (-to) of the video right before the output file name;
             # otherwise, they don't do what we expect them to do.
-            print("ffmpeg -i %s.avi %s -ss %d -to %d %s-%d.%s" %
+            print("ffmpeg -i %s.avi %s -ss %s -to %s %s-%d.%s" %
                   (name, ffmpeg_opts[ext], l[i], l[i+1], name, i+1, ext))
         else:
-            print("ffmpeg -ss %d -i %s.avi %s %s-%d.%s" %
+            print("ffmpeg -ss %s -i %s.avi %s %s-%d.%s" %
                   (l[i], name, ffmpeg_opts[ext], name, i+1, ext))
