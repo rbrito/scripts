@@ -27,6 +27,7 @@ for foo in foos:
     name = foo[0]
     l = foo[1:]
     n = len(l)
+
     for i in range(n):
         if i < n - 1:
             # peculiarity of ffmpeg: you have to put both the start (-ss)
