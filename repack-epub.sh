@@ -33,7 +33,7 @@ find . \( -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | xargs -0 -r jhead -pure
 # Repack the epub. NOTE: The order and the options *ARE* important.
 NEWNAME="$ORIGDIR/${ORIGNAME%%epub}new.epub"
 
-zip -r -D -X -9 "$NEWNAME" mimetype META-INF OEBPS
+zip -r -D -X -9 "$NEWNAME" mimetype *
 
 # Optimize ZIPs
 advzip -z3 "$NEWNAME"
