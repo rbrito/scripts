@@ -37,7 +37,7 @@ zip -r -D -X -9 "$NEWNAME" mimetype *
 
 # Optimize ZIPs
 advzip -z3 "$NEWNAME"
-advzip -z4 "$NEWNAME"
+#advzip -z4 "$NEWNAME"
 
 cd "$CURDIR"
 rm -rf "$WORKDIR"
