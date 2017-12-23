@@ -50,6 +50,11 @@ def generate_filter(num_files):
 
 
 def generate_cmdline(args):
+    """
+    >>> l = ['input1.mp4', 'input2.webm', 'input3.mov']
+    >>> generate_cmdline(l)
+    "ffmpeg -i input1.mp4 -i input2.webm -i input3.mov -filter_complex '[0:v:0][0:a:0][1:v:0][1:a:0][2:v:0][2:a:0]concat=n=3:v=1:a=1[outv][outa]' -map '[outv]' -map '[outa]' output.mkv"
+    """
     cmd_part0 = ['ffmpeg']
 
     cmd_inputs = generate_inputs(args)
