@@ -28,6 +28,10 @@ def generate_inputs(input_files):
 def generate_filter(num_files):
     """
     Generate list of mappings for the -filter_complex option of ffmpeg.
+
+    Example:
+    >>> generate_filter(3)
+    ['-filter_complex', '[0:v:0][0:a:0][1:v:0][1:a:0][2:v:0][2:a:0]concat=n=3:v=1:a=1[outv][outa]']
     """
     cmd_filter = ['-filter_complex']
 
