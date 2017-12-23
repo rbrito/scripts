@@ -49,19 +49,20 @@ def generate_filter(num_files):
     return cmd_filter
 
 
-def main():
+def generate_cmdline(args):
     cmd_part0 = ['ffmpeg']
 
-    cmd_inputs = generate_inputs(sys.argv[1:])
-    cmd_filter = generate_filter(len(sys.argv) - 1)
+    cmd_inputs = generate_inputs(args)
+    cmd_filter = generate_filter(len(args))
 
     cmd_trailing = ['-map', '[outv]', '-map', '[outa]', 'output.mkv']
 
     cmd_final = [shlex.quote(s) for s in
                  cmd_part0 + cmd_inputs + cmd_filter + cmd_trailing]
 
-    print(' '.join(cmd_final))
+    return ' '.join(cmd_final)
 
 
 if __name__ == '__main__':
-    main()
+    cmd_line = generate_cmdline(sys.argv[1:])
+    print(cmd_line)
