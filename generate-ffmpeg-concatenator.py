@@ -52,7 +52,7 @@ if __name__ == '__main__':
     cmd_part0 = ['ffmpeg']
 
     cmd_inputs = generate_inputs(sys.argv[1:])
-    cmd_filter = generate_filter(len(sys.argv) -1)
+    cmd_filter = generate_filter(len(sys.argv) - 1)
 
     cmd_trailing = ['-map', '[outv]', '-map', '[outa]', 'output.mkv']
 
