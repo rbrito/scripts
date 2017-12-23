@@ -48,7 +48,7 @@ def generate_filter(num_files):
     return cmd_filter
 
 
-if __name__ == '__main__':
+def main():
     cmd_part0 = ['ffmpeg']
 
     cmd_inputs = generate_inputs(sys.argv[1:])
@@ -59,3 +59,7 @@ if __name__ == '__main__':
     cmd_final = cmd_part0 + cmd_inputs + cmd_filter + cmd_trailing
 
     print(cmd_final)
+
+
+if __name__ == '__main__':
+    main()
