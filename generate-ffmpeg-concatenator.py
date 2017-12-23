@@ -11,6 +11,7 @@ ffmpeg -i input1.mp4 -i input2.webm -i input3.mov \
 """
 
 import sys
+import shlex
 
 
 def generate_inputs(input_files):
@@ -56,9 +57,10 @@ def main():
 
     cmd_trailing = ['-map', '[outv]', '-map', '[outa]', 'output.mkv']
 
-    cmd_final = cmd_part0 + cmd_inputs + cmd_filter + cmd_trailing
+    cmd_final = [shlex.quote(s) for s in
+                 cmd_part0 + cmd_inputs + cmd_filter + cmd_trailing]
 
-    print(cmd_final)
+    print(' '.join(cmd_final))
 
 
 if __name__ == '__main__':
