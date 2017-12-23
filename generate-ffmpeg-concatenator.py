@@ -27,7 +27,7 @@ def generate_inputs(input_files):
 
 def generate_filter(num_files):
     """
-    Generate list of inputs to ffmpeg, with the -i option before each file name.
+    Generate list of mappings for the -filter_complex option of ffmpeg.
     """
     cmd_filter = ['-filter_complex']
 
