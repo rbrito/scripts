@@ -12,6 +12,7 @@ ffmpeg -i input1.mp4 -i input2.webm -i input3.mov \
 
 import sys
 
+
 def generate_inputs(input_files):
     """
     Generate list of inputs to ffmpeg, with the -i option before each file name.
