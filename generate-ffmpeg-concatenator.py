@@ -25,7 +25,7 @@ def generate_inputs(input_files):
     return inputs
 
 
-def generate_filter(input_files):
+def generate_filter(num_files):
     """
     Generate list of inputs to ffmpeg, with the -i option before each file name.
     """
@@ -33,11 +33,10 @@ def generate_filter(input_files):
 
     filter_string_parts = []  # this will be joined to become a single string
 
-    n = len(input_files)
-    for i in range(n):
+    for i in range(num_files):
         filter_string_parts.append('[%d:v:0][%d:a:0]' % (i, i))
 
-    filter_string_parts.append('concat=n=%d:v=1:a=1[outv][outa]' % (n))
+    filter_string_parts.append('concat=n=%d:v=1:a=1[outv][outa]' % (num_files))
 
     filter_string = ''.join(filter_string_parts)
     cmd_filter.append(filter_string)
@@ -49,7 +48,7 @@ if __name__ == '__main__':
     cmd_part0 = ['ffmpeg']
 
     cmd_inputs = generate_inputs(sys.argv[1:])
-    cmd_filter = generate_filter(sys.argv[1:])
+    cmd_filter = generate_filter(len(sys.argv) -1)
 
     cmd_trailing = ['-map', '[outv]', '-map', '[outa]', 'output.mkv']
 
