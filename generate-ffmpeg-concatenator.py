@@ -35,7 +35,7 @@ def generate_filter(input_files):
 
     n = len(input_files)
     for i in range(n):
-        filter_string_parts.append('[%d:v:%d][%d:a:%d]' % (i, i, i, i))
+        filter_string_parts.append('[%d:v:0][%d:a:0]' % (i, i))
 
     filter_string_parts.append('concat=n=%d:v=1:a=1[outv][outa]' % (n))
 
