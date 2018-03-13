@@ -15,9 +15,6 @@ for lineno, line in enumerate(lines):
             hours = 0
         minutes = int(parts['minutes'])
         seconds = int(parts['seconds'])
-        # print(hours)
-        # print(minutes)
-        # print(seconds)
-        
+
         print('CHAPTER%02d=%02d:%02d:%02d.000' % (lineno, hours, minutes, seconds))
         print('CHAPTER%02dNAME=%s' % (lineno, parts['title']))
