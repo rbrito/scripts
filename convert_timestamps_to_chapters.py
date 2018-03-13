@@ -6,7 +6,7 @@ import sys
 lines = sys.stdin.readlines()
 
 for lineno, line in enumerate(lines):
-    m = re.match('(?P<hours>\d+:)?(?P<minutes>\d+):(?P<seconds>\d+) (?P<title>.*)', line)
+    m = re.match(r'(?P<hours>\d+:)?(?P<minutes>\d+):(?P<seconds>\d+) (?P<title>.*)', line)
     if m:
         parts = m.groupdict()
         if parts['hours']:
