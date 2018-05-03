@@ -20,13 +20,13 @@ if __name__ == '__main__':
             title_match = re.search(r'\[\[!meta\s*title=(.*)\]\]', line)
             if title_match:
                 title = title_match.group(1)
-                head["title"] = title
+                head['title'] = title
                 continue
 
             date_match = re.search(r'\[\[!meta\s*date=(.*)\]\]', line)
             if date_match:
                 date = date_match.group(1)
-                head["date"] = date
+                head['date'] = date
                 continue
 
             tag_match = re.search(r'\[\[!tag\s*(.*)\]\]', line)
@@ -53,7 +53,6 @@ if __name__ == '__main__':
         ### Header
 
         post.extend(body)
-
 
         with open('new-%s' % filename, 'w') as f:
             f.write(''.join(post))
