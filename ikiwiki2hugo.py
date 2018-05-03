@@ -45,7 +45,7 @@ if __name__ == '__main__':
         for k, v in head.items():
             post.append('%s: %s\n' % (k, v))
 
-        post.append('tags: %s\n' % ', '.join(tags))
+        post.append('tags: [%s]\n' % ', '.join(tags))
 
         post.append(SEPARATOR_LINE)
         ### Header
