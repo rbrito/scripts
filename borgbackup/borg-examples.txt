@@ -1,0 +1,3 @@
+borg list --progress /media/rbrito/Seagate-2000GB-1/borg-backups/
+borg prune --keep-daily 7 /media/rbrito/Seagate-2000GB-1/borg-backups/
+borg delete --stats --progress /media/rbrito/Seagate-2000GB-1/borg-backups/ zatz-2017-11-15T01:34:59
