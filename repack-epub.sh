@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # FIXME: Quote everything for whitespace!
 
 # Note: mktemp instead of the other insecure alternatives
