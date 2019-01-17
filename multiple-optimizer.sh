@@ -36,10 +36,10 @@ esac
 
 qpdf --stream-data=uncompress --compress-streams=n --decode-level=specialized "$1" "${1%%pdf}unc.pdf"
 
-$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --use-multivalent=no "${1%%pdf}unc.pdf"
-$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --use-multivalent=yes --do-optimize-images=no "${1%%pdf}unc.pso.pdf"
-$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --use-multivalent=no --do-optimize-images=no "${1%%pdf}unc.pso.psom.pdf"
+$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=no "${1%%pdf}unc.pdf"
+$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=yes --do-optimize-images=no "${1%%pdf}unc.pso.pdf"
+$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=no --do-optimize-images=no "${1%%pdf}unc.pso.psom.pdf"
 
-$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --use-multivalent=no "${1%%pdf}pdf"
-$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --use-multivalent=yes --do-optimize-images=no "${1%%pdf}pso.pdf"
-$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --use-multivalent=no --do-optimize-images=no "${1%%pdf}pso.psom.pdf"
+$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=no "${1%%pdf}pdf"
+$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=yes --do-optimize-images=no "${1%%pdf}pso.pdf"
+$OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=no --do-optimize-images=no "${1%%pdf}pso.psom.pdf"
