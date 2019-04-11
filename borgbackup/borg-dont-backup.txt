@@ -16,6 +16,7 @@ re:/home/[^/]+/.mozilla/firefox/[^.]+.default/datareporting/archived/.*
 re:/home/[^/]+/.mozilla/firefox/[^.]+.default/storage/.*
 re:/home/[^/]+/.mtab.fuseiso
 re:/home/[^/]+/Desktop/youtube-dl.*
+re:/home/[^/]+/Dropbox/.dropbox.cache/.*
 re:/home/[^/]+/gPodder/Downloads/.*
 re:/home/[^/]+/gPodder/Logs/.*
 re:/home/[^/]+/tmp/.*
