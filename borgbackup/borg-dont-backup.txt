@@ -12,8 +12,8 @@ re:/home/[^/]+/.dvdcss/.*
 re:/home/[^/]+/.gcp/.*
 re:/home/[^/]+/.gnome2/accels/.*
 re:/home/[^/]+/.macromedia/.*
-re:/home/[^/]+/.mozilla/firefox/8r2s1bq3.default/datareporting/archived/.*
-re:/home/[^/]+/.mozilla/firefox/8r2s1bq3.default/storage/.*
+re:/home/[^/]+/.mozilla/firefox/[^.]+.default/datareporting/archived/.*
+re:/home/[^/]+/.mozilla/firefox/[^.]+.default/storage/.*
 re:/home/[^/]+/.mtab.fuseiso
 re:/home/[^/]+/Desktop/youtube-dl.*
 re:/home/[^/]+/gPodder/Downloads/.*
