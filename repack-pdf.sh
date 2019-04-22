@@ -1,5 +1,6 @@
 #!/bin/sh
 
+set -e
 
 # Note: mktemp instead of the other insecure alternatives
 WORKDIR="$(mktemp -d)"
