@@ -11,7 +11,7 @@ ORIGNAME="$(basename "$REALPATH")"
 
 cd "$WORKDIR"
 
-pdfimages -tiff ../"$1" a
+pdfimages -j -tiff ../"$1" a
 jhead -purejpg *.jpg
 jpgcrush *.jpg
 pingo -lossless -s9 -verbose=3 *.png
