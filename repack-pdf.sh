@@ -33,6 +33,8 @@ pingo -lossless -s9 -verbose=3 *.png
 
 # exiftool -Xresolution=600 -Yresolution=600 -ResolutionUnit=inches *.tif
 
+# FIXME: extract the pagesize from the original with pdfinfo
+# img2pdf --verbose -o "$NEWNAME" --pagesize 421ptx720pt *
 img2pdf --verbose -o "$NEWNAME" *
 
 cd "$CURDIR"
