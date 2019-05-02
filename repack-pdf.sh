@@ -3,21 +3,31 @@
 #set -e
 
 KEEP_TEMP_DIR=0
+USE_LOCAL_DIR=0
 
 case $1 in
     --help)
-        echo "$0 [--keep-temp-dir] <input.pdf>"
+        echo "$0 [--keep-temp-dir] [--use-local-dir] <input.pdf>"
         exit 0
         ;;
     --keep-temp-dir)
         KEEP_TEMP_DIR=1
         shift
         ;;
+    --use-local-dir)
+        USE_LOCAL_DIR=1
+        shift
+        ;;
 esac
 
 
 # Note: mktemp instead of the other insecure alternatives
-WORKDIR="$(mktemp -d)"
+if [ $USE_LOCAL_DIR = 1 ]; then
+    WORKDIR="$(mktemp -d --tmpdir=.)"
+else
+    WORKDIR="$(mktemp -d)"
+fi
+
 CURDIR="$PWD"
 REALPATH="$(realpath "$1")"
 ORIGDIR="$(dirname "$REALPATH")"
