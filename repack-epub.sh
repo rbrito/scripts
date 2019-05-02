@@ -27,6 +27,7 @@ find . -iname "*.png" -print0 | xargs -0 -r advpng -z3
 #find . -iname "*.png" -print0 | xargs -0 -r advpng -z4
 find . -iname "*.png" -print0 | xargs -0 -r advdef -z3
 #find . -iname "*.png" -print0 | xargs -0 -r advdef -z4
+find . -iname "*.png" -print0 | xargs -0 -r pingo -lossless -s9 -verbose=3
 
 # Optimize JPGs
 find . \( -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | xargs -0 -r jpgcrush
