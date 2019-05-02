@@ -18,19 +18,19 @@ case $1 in
         shift
         ;;
     --optimize-normal)
-        IMAGE_OPTIMIZERS=rbrito,jbig2
+        IMAGE_OPTIMIZERS=pingo9,rbrito,jbig2
         shift
         ;;
     --optimize-extra)
-        IMAGE_OPTIMIZERS=pngout,rbrito3,jbig2
+        IMAGE_OPTIMIZERS=pingo9,pngout,rbrito3,jbig2
         shift
         ;;
     --optimize-ultra)
-        IMAGE_OPTIMIZERS=zopflipng,pngout3,rbrito3,jbig2
+        IMAGE_OPTIMIZERS=pingo9,zopflipng,pngout3,rbrito3,jbig2
         shift
         ;;
     *)
-        IMAGE_OPTIMIZERS=rbrito,jbig2
+        IMAGE_OPTIMIZERS=pingo9,rbrito,jbig2
 esac
 
 
