@@ -27,9 +27,9 @@ NEWNAME="$ORIGDIR/${ORIGNAME%%pdf}repack.pdf"
 cd "$WORKDIR"
 
 pdfimages -j -tiff "$REALPATH" a
-jhead -purejpg *.jpg
-jpgcrush *.jpg
-pingo -lossless -s9 -verbose=3 *.png
+find . -iname "*.jpg" -print0 | xargs -0 -r jhead -purejpg
+find . -iname "*.jpg" -print0 | xargs -0 -r jpgcrush
+find . -iname "*.png" -print0 | xargs -0 -r pingo -lossless -s9 -verbose=3
 
 # exiftool -Xresolution=600 -Yresolution=600 -ResolutionUnit=inches *.tif
 
