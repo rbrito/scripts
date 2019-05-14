@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+#set -e
 
 OPTIMIZER=~/Downloads/pdfsizeopt/pdfsizeopt
 
