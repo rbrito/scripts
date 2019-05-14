@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# FIXME: preserve bookmarks (very important!)
+# FIXME: preserve annotations (not so important!)
+# FIXME: remove watermarks (important!)
+# FIXME: preserve OCR text (important!)
+
 #set -e
 
 KEEP_TEMP_DIR=0
