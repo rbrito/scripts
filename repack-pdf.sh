@@ -5,6 +5,8 @@
 # FIXME: remove watermarks (important!)
 # FIXME: preserve OCR text (important!)
 
+# FIXME: Rotate PDF pages: qpdf in.pdf --rotate=-90:221-227 --rotate=-90:325-326 out.pdf
+
 #set -e
 
 KEEP_TEMP_DIR=0
