@@ -27,7 +27,6 @@ case $1 in
         ;;
 esac
 
-
 # Note: mktemp instead of the other insecure alternatives
 if [ $USE_LOCAL_DIR = 1 ]; then
     WORKDIR="$(mktemp -d --tmpdir=.)"
@@ -44,11 +43,14 @@ NEWNAME="$ORIGDIR/${ORIGNAME%%pdf}repack.pdf"
 cd "$WORKDIR"
 
 pdfimages -j -tiff "$REALPATH" a
+
+# FIXME: remove this hardcoded process!
+exiftool -Xresolution=600 -Yresolution=600 -ResolutionUnit=inches a-*; rm *_original
+
 find . -iname "*.jpg" -print0 | xargs -0 -r jhead -purejpg
 find . -iname "*.jpg" -print0 | xargs -0 -r jpgcrush
 find . -iname "*.png" -print0 | xargs -0 -r pingo -lossless -s9 -verbose=3
 
-# exiftool -Xresolution=600 -Yresolution=600 -ResolutionUnit=inches *.tif
 
 # FIXME: extract the pagesize from the original with pdfinfo
 # img2pdf --verbose -o "$NEWNAME" --pagesize 421ptx720pt *
