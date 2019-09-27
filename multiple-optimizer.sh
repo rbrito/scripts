@@ -26,7 +26,7 @@ case $1 in
         shift
         ;;
     --optimize-ultra)
-        IMAGE_OPTIMIZERS=pingo9,zopflipng,pngout3,rbrito3,jbig2
+        IMAGE_OPTIMIZERS=pingo9+extra,zopflipng,pngout3,rbrito3,jbig2
         shift
         ;;
     *)
