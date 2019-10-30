@@ -22,7 +22,7 @@ for cmd, ext in cmds:
     logging.warning('    **** Executing command: <%s>.' % full_command)
     subprocess.run(full_command)
     new_file_name = file_name + '.' + ext
-    
+
     file_size = os.stat(new_file_name).st_size
     logging.warning('    **** Resulting file size: <%s>.' % file_size)
     sizes.append((new_file_name, file_size))
