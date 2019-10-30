@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
+import logging
 import os
 import os.path
 import subprocess
 import sys
-import logging
 
 
 if len(sys.argv) <= 0:
