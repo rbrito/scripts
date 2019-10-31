@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 
-if len(sys.argv) <= 0:
+if len(sys.argv) <= 1:
     sys.exit(1)
 
 cmds = [('gzip', 'gz'), ('bzip2', 'bz2'), ('xz', 'xz')]
