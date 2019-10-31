@@ -25,13 +25,6 @@ def main(args):
     all_parities = (args.even == False) and (args.odd == False)
     selected_parity = int(0 if args.even else args.odd)
 
-    # print(f'args.even is {args.even}')
-    # print(f'args.odd is {args.odd}')
-    # print(f'all_parities is {all_parities}')
-    # print(f'selected_parity is {selected_parity}')
-
-    # sys.exit(1)
-
     # FIXME: Generalize to loop over multiple files
     with open(args.filename) as input_file:
         lines = input_file.readlines()
@@ -59,18 +52,6 @@ def main(args):
         else:
             x, y, w, h = update_bbox(x_cur, y_cur, w_cur, h_cur, x, y, w, h)
 
-
-        # if x_cur < x:
-        #     x = x_cur
-        # if y_cur < y:
-        #     y = y_cur
-
-        # if w_cur > w:
-        #     w = w_cur
-        # if h_cur > h:
-        #     h = h_cur
-
-
     # FIXME: This code can be much, much more compact (we have to eliminate
     # redundancies).
     if all_parities:
@@ -85,10 +66,6 @@ def main(args):
 
 
 if __name__ == '__main__':
-    # if len(sys.argv) <= 1:
-    #     usage()
-    #     sys.exit(1)
-
     parser = argparse.ArgumentParser(description='Find bounding boxes for PDF files')
 
     parser.add_argument('--odd', action='store_true', default=False,
