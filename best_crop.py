@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
+import argparse
 import re
 import sys
-import argparse
 
 
 def update_bbox(x_cur, y_cur, w_cur, h_cur, x, y, w, h):
