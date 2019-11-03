@@ -20,7 +20,7 @@ def main(args):
     w = -1000000000000000 # - infinity
     h = -1000000000000000 # - infinity
 
-    all_parities = (args.even == False) and (args.odd == False)
+    all_parities = (not args.even) and (not args.odd)
     selected_parity = int(0 if args.even else args.odd)
 
     # FIXME: Generalize to loop over multiple files
