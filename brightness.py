@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Python script to essentially perform the same as:
 
@@ -14,6 +14,12 @@ References:
     http://en.wikibooks.org/wiki/Python_Programming/Dbus
     http://www.devtech.com/inhibitapplet
 """
+
+import os
+import sys
+
+import dbus
+
 
 DBUS_PROPS = {
     'gnome': {
@@ -49,11 +55,6 @@ def set_brightness(desktop, percentage):
 
 
 if __name__ == '__main__':
-    import os
-    import sys
-
-    import dbus
-
     if len(sys.argv) == 1:
         percentage = 40
     else:
