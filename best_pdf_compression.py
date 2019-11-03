@@ -8,11 +8,11 @@ import shutil
 import subprocess
 import sys
 
-
+BASIC_OPTS = ['--use-image-optimizer=pingo9,rbrito,jbig2', '--do-fast-bilevel-images=yes']
 CMDS = [
-    ('images', ['--use-image-optimizer=pingo9,rbrito,jbig2', '--use-multivalent=no', '--do-optimize-images=yes', '--do-fast-bilevel-images=yes'], '.pso'),
-    ('multivalent', ['--use-image-optimizer=pingo9,rbrito,jbig2', '--use-multivalent=yes', '--do-optimize-images=no', '--do-fast-bilevel-images=yes'], '.psom'),
-    ('final', ['--use-image-optimizer=pingo9,rbrito,jbig2', '--use-multivalent=no', '--do-optimize-images=no', '--do-fast-bilevel-images=yes'], '.pso')
+    (['--use-multivalent=no', '--do-optimize-images=yes'], '.pso'),
+    (['--use-multivalent=yes', '--do-optimize-images=no'], '.psom'),
+    (['--use-multivalent=no', '--do-optimize-images=no'], '.pso')
 ]
 
 
@@ -63,6 +63,7 @@ def compress_pdf(opts, in_filename):
     cmd_prefix = os.path.expanduser(cmd_prefix)
 
     cmd = [cmd_prefix]
+    cmd.extend(BASIC_OPTS)
     cmd.extend(opts)
     cmd.append(in_filename)
 
@@ -82,7 +83,7 @@ def main(args):
 
     filename = args.filename
 
-    for _, opts, extra_ext in CMDS:
+    for opts, extra_ext in CMDS:
 
         ret = compress_pdf(opts, filename)
         print('\n')
