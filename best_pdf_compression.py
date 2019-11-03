@@ -105,17 +105,16 @@ def main(args):
     sorted_list = sorted(sizes, key=lambda x: x[1])
     logging.debug('    **** sorted list: %s.', sorted_list)
 
-    orig_position = sorted_list.index(orig_pair)
-
     # Definitely remove the files that are bigger than the original (BUT NOT
     # THE ORIGINAL).
-    for filename, _ in sorted_list[orig_position + 1:]:
-        unconditional_unlink(filename)
+    orig_position = sorted_list.index(orig_pair)
+    candidates, list_to_remove = sorted_list[:orig_position], sorted_list[orig_position + 1:]
 
-    candidates, list_of_removed = sorted_list[:orig_position], sorted_list[orig_position + 1:]
-
-    logging.debug('    **** List of removed: %s.', list_of_removed)
+    logging.debug('    **** List to remove: %s.', list_to_remove)
     logging.debug('    **** List of candidates: %s.', candidates)
+
+    for filename, _ in list_to_remove:
+        unconditional_unlink(filename)
 
     for candidate, _ in candidates:
         ret = compare_pdfs(orig_name, candidate)
