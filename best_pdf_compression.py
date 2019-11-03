@@ -25,7 +25,7 @@ def unconditional_mkdir(dirname):
 
 
 def unconditional_move(src, dst):
-    logging.info('    **** Moving %s to %s.', src, dst)
+    logging.debug('    **** Moving %s to %s.', src, dst)
     try:
         shutil.move(src, dst)
     except shutil.Error as e:
@@ -43,11 +43,32 @@ def unconditional_stat(filename):
 
 
 def unconditional_unlink(filename):
-    logging.info('    **** Removing %s.', filename)
+    logging.debug('    **** Removing %s.', filename)
     try:
         os.unlink(filename)
     except FileNotFoundError:
         pass
+
+
+def compare_pdfs(original, candidate):
+    cmd = ['comparepdf', '--verbose=2', '--compare=appearance', original, candidate]
+    logging.debug('    **** Comparing original %s with %s.', original, candidate)
+    logging.debug('    **** Command line to execute: %s.', cmd)
+
+    return subprocess.run(cmd)
+
+
+def compress_pdf(opts, in_filename):
+    cmd_prefix = '~/Downloads/pdfsizeopt/pdfsizeopt'
+    cmd_prefix = os.path.expanduser(cmd_prefix)
+
+    cmd = [cmd_prefix]
+    cmd.extend(opts)
+    cmd.append(in_filename)
+
+    logging.debug('    **** Executing command: %s', cmd)
+
+    return subprocess.run(cmd)
 
 
 # The main function of the program
@@ -57,88 +78,68 @@ def main(args):
 
     orig_pair = (orig_name, orig_size)
 
-    sizes = [(orig_name, orig_size)]
+    sizes = [orig_pair]
 
-    cmd_prefix = '~/Downloads/pdfsizeopt/pdfsizeopt'
-    cmd_prefix = os.path.expanduser(cmd_prefix)
-
-    file_name = args.filename
+    filename = args.filename
 
     for _, opts, extra_ext in CMDS:
-        full_command = [cmd_prefix]
-        full_command.extend(opts)
-        full_command.append(file_name)
 
-        file_name, ext = os.path.splitext(file_name)
-        new_file_name = file_name + extra_ext + ext
-
-        logging.debug('    **** Executing command: %s', full_command)
-        ret = subprocess.run(full_command)
-
-        print('\n\n')
+        ret = compress_pdf(opts, filename)
+        print('\n')
 
         # Don't even bother with commands that didn't execute; also,
         # subsequent commands depend on previous phases
         if ret.returncode != 0:
             break
 
-        file_size = unconditional_stat(new_file_name)
+        filename, ext = os.path.splitext(filename)
+        new_filename = filename + extra_ext + ext
 
-        sizes.append((new_file_name, file_size))
+        new_file_size = unconditional_stat(new_filename)
 
-        file_name = new_file_name
+        sizes.append((new_filename, new_file_size))
+
+        filename = new_filename
 
     sorted_list = sorted(sizes, key=lambda x: x[1])
     logging.debug('    **** sorted list: %s.', sorted_list)
 
     orig_position = sorted_list.index(orig_pair)
 
-    logging.debug('    **** position of original file: %d.', orig_position)
-    logging.debug('    **** original tuple: %s.', orig_pair)
-    logging.debug('    **** best option: %s.', sorted_list[0])
-
     # Definitely remove the files that are bigger than the original (BUT NOT
     # THE ORIGINAL).
-    for file_name, _ in sorted_list[orig_position + 1:]:
-        unconditional_unlink(file_name)
+    for filename, _ in sorted_list[orig_position + 1:]:
+        unconditional_unlink(filename)
 
     candidates, list_of_removed = sorted_list[:orig_position], sorted_list[orig_position + 1:]
 
     logging.debug('    **** List of removed: %s.', list_of_removed)
     logging.debug('    **** List of candidates: %s.', candidates)
 
-    # comparepdf --verbose=0 --compare=appearance in.pdf out.pdf
-    cmd = ['comparepdf', '--verbose=2', '--compare=appearance', orig_name]
-
-    for candidate_name, _ in candidates:
-        logging.debug('    **** Comparing original %s with %s.', orig_name, candidate_name)
-        full_command = cmd[:]
-        full_command.append(candidate_name)
-
-        logging.debug('    **** Command line to execute: %s.', full_command)
-
-        ret = subprocess.run(full_command)
+    for candidate, _ in candidates:
+        ret = compare_pdfs(orig_name, candidate)
 
         if ret.returncode == 0:
-            # success !
+            # Success !
             unconditional_mkdir('done')
             unconditional_mkdir('orig')
 
-            unconditional_move(candidate_name, 'done')
+            unconditional_move(candidate, 'done')
             unconditional_move(orig_name, 'orig')
 
+            # We clean up the remaining/unused candidates now
             break
 
         elif ret.returncode in [1, 2]:
             # some error that the manpage of comparepdf doesn't specify what it is
             pass
         else:
-            # some difference found
+            # Some difference found; keep files for further inspection
             unconditional_mkdir('not-optimized')
-            unconditional_move(candidate_name, 'not-optimized')
+            unconditional_move(candidate, 'not-optimized')
 
-    for candidate_name, _ in candidates:
-        unconditional_unlink(candidate_name)
+    for candidate, _ in candidates:
+        unconditional_unlink(candidate)
 
 
 if __name__ == '__main__':
