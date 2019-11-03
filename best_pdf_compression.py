@@ -74,6 +74,7 @@ def compress_pdf(opts, in_filename):
 
 # The main function of the program
 def main(args):
+    # FIXME: Way too much repetition
     orig_name = args.filename
     orig_size = unconditional_stat(orig_name)
 
@@ -84,7 +85,6 @@ def main(args):
     filename = args.filename
 
     for opts, extra_ext in CMDS:
-
         ret = compress_pdf(opts, filename)
         print('\n')
 
@@ -116,16 +116,20 @@ def main(args):
     for filename, _ in list_to_remove:
         unconditional_unlink(filename)
 
+    basedir, _ = os.path.split(orig_name)
+
     for candidate, _ in candidates:
         ret = compare_pdfs(orig_name, candidate)
 
         if ret.returncode == 0:
             # Success !
-            unconditional_mkdir('done')
-            unconditional_mkdir('orig')
+            done_dir = os.path.join(basedir, 'done')
+            orig_dir = os.path.join(basedir, 'orig')
+            unconditional_mkdir(done_dir)
+            unconditional_mkdir(orig_dir)
 
-            unconditional_move(candidate, 'done')
-            unconditional_move(orig_name, 'orig')
+            unconditional_move(candidate, done_dir)
+            unconditional_move(orig_name, orig_dir)
 
             # We clean up the remaining/unused candidates now
             break
@@ -135,8 +139,9 @@ def main(args):
             pass
         else:
             # Some difference found; keep files for further inspection
-            unconditional_mkdir('not-optimized')
-            unconditional_move(candidate, 'not-optimized')
+            keeper_dir = os.path.join(basedir, 'not-optimized')
+            unconditional_mkdir(keeper_dir)
+            unconditional_move(candidate, keeper_dir)
 
     for candidate, _ in candidates:
         unconditional_unlink(candidate)
