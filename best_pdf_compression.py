@@ -4,8 +4,10 @@ import argparse
 import logging
 import os
 import os.path
-import subprocess
 import shutil
+import subprocess
+import sys
+
 
 CMDS = [
     ('images', ['--use-image-optimizer=pingo9,rbrito,jbig2', '--use-multivalent=no', '--do-optimize-images=yes', '--do-fast-bilevel-images=yes'], '.pso'),
@@ -14,21 +16,55 @@ CMDS = [
 ]
 
 
+# Some auxiliary functions to avoid dealing with exceptions
+def unconditional_mkdir(dirname):
+    try:
+        os.mkdir(dirname)
+    except FileExistsError:
+        pass
+
+
+def unconditional_move(src, dst):
+    logging.info('    **** Moving %s to %s.', src, dst)
+    try:
+        shutil.move(src, dst)
+    except shutil.Error as e:
+        logging.warning('    **** Exception: %s.', e)
+
+
+def unconditional_stat(filename):
+    try:
+        file_size = os.stat(filename).st_size
+    except FileNotFoundError:
+        logging.error('    **** File %s not found.', filename)
+        sys.exit(1)
+
+    return file_size
+
+
+def unconditional_unlink(filename):
+    logging.info('    **** Removing %s.', filename)
+    try:
+        os.unlink(filename)
+    except FileNotFoundError:
+        pass
+
+
+# The main function of the program
 def main(args):
     orig_name = args.filename
+    orig_size = unconditional_stat(orig_name)
 
-    file_size = os.stat(orig_name).st_size
+    orig_pair = (orig_name, orig_size)
 
-    orig_pair = (orig_name, file_size)
-
-    sizes = [(orig_name, file_size)]
+    sizes = [(orig_name, orig_size)]
 
     cmd_prefix = '~/Downloads/pdfsizeopt/pdfsizeopt'
     cmd_prefix = os.path.expanduser(cmd_prefix)
 
     file_name = args.filename
 
-    for phase, opts, extra_ext in CMDS:
+    for _, opts, extra_ext in CMDS:
         full_command = [cmd_prefix]
         full_command.extend(opts)
         full_command.append(file_name)
@@ -46,7 +82,7 @@ def main(args):
         if ret.returncode != 0:
             break
 
-        file_size = os.stat(new_file_name).st_size
+        file_size = unconditional_stat(new_file_name)
 
         sizes.append((new_file_name, file_size))
 
@@ -63,11 +99,10 @@ def main(args):
 
     # Definitely remove the files that are bigger than the original (BUT NOT
     # THE ORIGINAL).
-    for file_name, _ in sorted_list[orig_position+1:]:
-        logging.debug('    **** Removing: %s.', file_name)
-        os.unlink(file_name)
+    for file_name, _ in sorted_list[orig_position + 1:]:
+        unconditional_unlink(file_name)
 
-    candidates, list_of_removed = sorted_list[:orig_position], sorted_list[orig_position+1:]
+    candidates, list_of_removed = sorted_list[:orig_position], sorted_list[orig_position + 1:]
 
     logging.debug('    **** List of removed: %s.', list_of_removed)
     logging.debug('    **** List of candidates: %s.', candidates)
@@ -75,8 +110,7 @@ def main(args):
     # comparepdf --verbose=0 --compare=appearance in.pdf out.pdf
     cmd = ['comparepdf', '--verbose=2', '--compare=appearance', orig_name]
 
-    for candidate_name, candidate_size in candidates:
-
+    for candidate_name, _ in candidates:
         logging.debug('    **** Comparing original %s with %s.', orig_name, candidate_name)
         full_command = cmd[:]
         full_command.append(candidate_name)
@@ -87,54 +121,28 @@ def main(args):
 
         if ret.returncode == 0:
             # success !
-            try:
-                os.mkdir('done')
-                os.mkdir('orig')
-            except FileExistsError:
-                pass
+            unconditional_mkdir('done')
+            unconditional_mkdir('orig')
 
-            logging.debug('    **** Moving %s to %s.', candidate_name, 'done')
-            try:
-                shutil.move(candidate_name, 'done')
-            except shutil.Error as e:
-                logging.warn('    **** Exception: %s.', e)
-            
-            logging.debug('    **** Moving %s to %s.', orig_name, 'orig')
-            try:
-                shutil.move(orig_name, 'orig')
-            except shutil.Error as e:
-                logging.warn('    **** Exception: %s.', e)
+            unconditional_move(candidate_name, 'done')
+            unconditional_move(orig_name, 'orig')
 
             break
-        
+
         elif ret.returncode in [1, 2]:
             # some error that the manpage of comparepdf doesn't specify what it is
             pass
         else:
             # some difference found
-            try:
-                os.mkdir('not-optimized')
-            except FileExistsError:
-                pass
-
-            logging.debug('    **** Moving %s to %s.', candidate_name, 'not-optimized')
-
-            try:
-                shutil.move(candidate_name, 'not-optimized')
-            except shutil.Error as e:
-                logging.warn('    **** Exception: %s.', e)
-
+            unconditional_mkdir('not-optimized')
+            unconditional_move(candidate_name, 'not-optimized')
 
     for candidate_name, _ in candidates:
-        try:
-            os.unlink(candidate_name)
-        except FileNotFoundError:
-            pass
-
+        unconditional_unlink(candidate_name)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Select "best" compression of a file')
+    parser = argparse.ArgumentParser(description='Select "best" optimized version of a PDF file')
 
     parser.add_argument('--verbose', action='store_true', default=False,
                         help='generate verbose output')
