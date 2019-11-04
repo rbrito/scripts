@@ -16,6 +16,7 @@ CMDS = [
 ]
 TMPDIR = '/tmp/rbrito'
 
+
 # Some auxiliary functions to avoid dealing with exceptions
 def unconditional_mkdir(dirname):
     try:
