@@ -182,11 +182,11 @@ if __name__ == '__main__':
     else:
         logging.basicConfig(level=logging.INFO)
 
-    try:
-        os.mkdir(TMPDIR, mode=0o700)
-    except FileExistsError:
-        pass
-    # FIXME: Cleanup the TMP DIR if we fail somehow
-    os.environ['TMPDIR'] = TMPDIR
+    # try:
+    #     os.mkdir(TMPDIR, mode=0o700)
+    # except FileExistsError:
+    #     pass
+    # # FIXME: Cleanup the TMP DIR if we fail somehow
+    # os.environ['TMPDIR'] = TMPDIR
 
     main(args)
