@@ -118,6 +118,8 @@ def main(args):
 
     basedir, _ = os.path.split(orig_name)
 
+    optimized = False  # if we got a smaller file than the original one
+
     for candidate, _ in candidates:
         ret = compare_pdfs(orig_name, candidate)
 
@@ -131,6 +133,7 @@ def main(args):
             unconditional_move(candidate, done_dir)
             unconditional_move(orig_name, orig_dir)
 
+            optimized = True
             # We clean up the remaining/unused candidates now
             break
 
@@ -143,6 +146,15 @@ def main(args):
             unconditional_mkdir(keeper_dir)
             unconditional_move(candidate, keeper_dir)
 
+    if optimized is False:
+        # The best option was the original file...
+        done_dir = os.path.join(basedir, 'done')
+        unconditional_mkdir(done_dir)
+        unconditional_move(orig_name, done_dir)
+        logging.warning("    **** Couldn't optimize %s further.", orig_name)
+
+    # Check the relationship of optimized == False/True vs. the remaining
+    # of candidates
     for candidate, _ in candidates:
         unconditional_unlink(candidate)
 
