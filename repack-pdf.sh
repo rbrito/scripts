@@ -53,8 +53,9 @@ find . -iname "*.png" -print0 | xargs -0 -r pingo -lossless -s9 -verbose=3
 
 
 # FIXME: extract the pagesize from the original with pdfinfo
-# img2pdf --verbose -o "$NEWNAME" --pagesize 421ptx720pt *
-img2pdf --verbose -o "$NEWNAME" *
+PAGESIZE=$(pdfinfo "$REALPATH" | grep -P -i -o "\b(\d+)(.\d+)? x (\d+)(.\d+)?\b" | sed -e 's/ x /ptx/; s/$/pt/')
+
+img2pdf --verbose -o "$NEWNAME" --pagesize $PAGESIZE *
 
 cd "$CURDIR"
 
