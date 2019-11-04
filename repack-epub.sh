@@ -22,15 +22,15 @@ find . -type d -print0 | xargs -0 -r chmod 755
 find . -type f -print0 | xargs -0 -r chmod 644
 
 # Optimize PNGs
-find . -iname "*.png" -print0 | xargs -0 -r optipng -o4
-find . -iname "*.png" -print0 | xargs -0 -r pingo -lossless -s9 -verbose=3
-find . -iname "*.png" -print0 | xargs -0 -r advpng -z3
+find . -iname "*.png" -print0 | parallel -0 -X --eta optipng -o4
+find . -iname "*.png" -print0 | parallel -0 -X --eta pingo -lossless -s9 -verbose=3
+find . -iname "*.png" -print0 | parallel -0 -X --eta advpng -z3
 #find . -iname "*.png" -print0 | xargs -0 -r advpng -z4
-find . -iname "*.png" -print0 | xargs -0 -r advdef -z3
+find . -iname "*.png" -print0 | parallel -0 -X --eta advdef -z3
 #find . -iname "*.png" -print0 | xargs -0 -r advdef -z4
 
 # Optimize JPGs
-find . \( -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | xargs -0 -r jpgcrush
+find . \( -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | parallel -0 -X --eta jpgcrush
 find . \( -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | xargs -0 -r jhead -purejpg
 
 # Repack the epub. NOTE: The order and the options *ARE* important.
