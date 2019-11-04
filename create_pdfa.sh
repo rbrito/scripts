@@ -13,6 +13,9 @@ gs \
     -dAutoFilterColorImages=true \
     -dAutoFilterGrayImages=true \
     -dJPEGQ=95 \
+    -dDownsampleColorImages=false \
+    -dDownsampleGrayImages=false \
+    -dDownsampleMonoImages=false \
     -dPDFA=2 \
     -sOutputFile="${1%.*}.pdfa.pdf" \
     -dPDFACompatibilityPolicy=1 \
