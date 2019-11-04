@@ -95,7 +95,6 @@ def main(args):
 
         filename, ext = os.path.splitext(filename)
         new_filename = filename + extra_ext + ext
-
         new_file_size = unconditional_stat(new_filename)
 
         sizes.append((new_filename, new_file_size))
