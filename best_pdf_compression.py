@@ -14,7 +14,7 @@ CMDS = [
     (['--use-multivalent=yes', '--do-optimize-images=no'], '.psom'),
     (['--use-multivalent=no', '--do-optimize-images=no'], '.pso')
 ]
-
+TMPDIR = '/tmp/rbrito'
 
 # Some auxiliary functions to avoid dealing with exceptions
 def unconditional_mkdir(dirname):
@@ -181,5 +181,12 @@ if __name__ == '__main__':
         logging.basicConfig(level=logging.ERROR)
     else:
         logging.basicConfig(level=logging.INFO)
+
+    try:
+        os.mkdir(TMPDIR, mode=0o700)
+    except FileExistsError:
+        pass
+    # FIXME: Cleanup the TMP DIR if we fail somehow
+    os.environ['TMPDIR'] = TMPDIR
 
     main(args)
