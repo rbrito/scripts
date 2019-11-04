@@ -12,10 +12,10 @@ gs \
     -sColorConversionStrategy=RGB \
     -dAutoFilterColorImages=true \
     -dAutoFilterGrayImages=true \
-    -dJPEGQ=95 \
     -dDownsampleColorImages=false \
     -dDownsampleGrayImages=false \
     -dDownsampleMonoImages=false \
+    -dJPEGQ=90 \
     -dPDFA=2 \
     -sOutputFile="${1%.*}.pdfa.pdf" \
     -dPDFACompatibilityPolicy=1 \
