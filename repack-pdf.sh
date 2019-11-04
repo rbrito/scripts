@@ -9,8 +9,9 @@
 
 #set -e
 
-KEEP_TEMP_DIR=0
-USE_LOCAL_DIR=0
+KEEP_TEMP_DIR=1
+USE_LOCAL_DIR=1
+RESOLUTION=300
 
 case $1 in
     --help)
@@ -44,15 +45,14 @@ cd "$WORKDIR"
 
 pdfimages -j -tiff "$REALPATH" a
 
-# FIXME: remove this hardcoded process!
-exiftool -Xresolution=600 -Yresolution=600 -ResolutionUnit=inches a-*; rm *_original
+# # FIXME: remove this hardcoded process!
+# exiftool -Xresolution=$RESOLUTION -Yresolution=$RESOLUTION -ResolutionUnit=inches a-*; rm *_original
 
 find . -iname "*.jpg" -print0 | xargs -0 -r jhead -purejpg
 find . -iname "*.jpg" -print0 | xargs -0 -r jpgcrush
 find . -iname "*.png" -print0 | xargs -0 -r pingo -lossless -s9 -verbose=3
 
 
-# FIXME: extract the pagesize from the original with pdfinfo
 PAGESIZE=$(pdfinfo "$REALPATH" | grep -P -i -o "\b(\d+)(.\d+)? x (\d+)(.\d+)?\b" | sed -e 's/ x /ptx/; s/$/pt/')
 
 img2pdf --verbose -o "$NEWNAME" --pagesize $PAGESIZE *
