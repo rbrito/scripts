@@ -108,7 +108,9 @@ def main(args):
     # Definitely remove the files that are bigger than the original (BUT NOT
     # THE ORIGINAL).
     orig_position = sorted_list.index(orig_pair)
-    candidates, list_to_remove = sorted_list[:orig_position], sorted_list[orig_position + 1:]
+
+    candidates = sorted_list[:orig_position]
+    list_to_remove = sorted_list[orig_position + 1:]
 
     logging.debug('    **** List to remove: %s.', list_to_remove)
     logging.debug('    **** List of candidates: %s.', candidates)
