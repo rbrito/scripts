@@ -8,11 +8,13 @@ import shutil
 import subprocess
 import sys
 
-BASIC_OPTS = ['--use-image-optimizer=pingo9,rbrito,jbig2', '--do-fast-bilevel-images=yes']
+
+CMD = os.path.expanduser('~/Downloads/pdfsizeopt/pdfsizeopt')
 CMDS = [
-    (['--use-multivalent=no', '--do-optimize-images=yes'], '.pso'),
-    (['--use-multivalent=yes', '--do-optimize-images=no'], '.psom'),
-    (['--use-multivalent=no', '--do-optimize-images=no'], '.pso')
+    (['qpdf', '--stream-data=uncompress', '--compress-streams=n', '--decode-level=specialized'], '.unc'),
+    ([CMD, '--use-image-optimizer=pingo9,rbrito,jbig2', '--do-fast-bilevel-images=yes', '--use-multivalent=no', '--do-optimize-images=yes'], '.pso'),
+    ([CMD, '--use-image-optimizer=pingo9,rbrito,jbig2', '--do-fast-bilevel-images=yes', '--use-multivalent=yes', '--do-optimize-images=no'], '.psom'),
+    ([CMD, '--use-image-optimizer=pingo9,rbrito,jbig2', '--do-fast-bilevel-images=yes', '--use-multivalent=no', '--do-optimize-images=no'], '.pso')
 ]
 TMPDIR = '/tmp/rbrito'
 
@@ -59,48 +61,68 @@ def compare_pdfs(original, candidate):
     return subprocess.run(cmd)
 
 
-def compress_pdf(opts, in_filename):
-    cmd_prefix = '~/Downloads/pdfsizeopt/pdfsizeopt'
-    cmd_prefix = os.path.expanduser(cmd_prefix)
+def new_name(in_filename, extra_ext):
+    filename, ext = os.path.splitext(in_filename)
+    return filename + extra_ext + ext
 
-    cmd = [cmd_prefix]
-    cmd.extend(BASIC_OPTS)
-    cmd.extend(opts)
-    cmd.append(in_filename)
 
-    logging.debug('    **** Executing command: %s', cmd)
+def process_pdf(cmd, in_filename, out_filename):
+    full_cmd = cmd.copy()
+    full_cmd.append(in_filename)
+    full_cmd.append(out_filename)
 
-    return subprocess.run(cmd)
+    logging.debug('    **** Executing command: %s', full_cmd)
+
+    return subprocess.run(full_cmd)
+
+
+def generate_candidates(orig_name, full_generation=False):
+    '''
+    Generate various compressed versions of orig_name.
+
+    Given a PDF file orig_name, we try many strategies (some "chained" on
+    top of each other) to further compress the original file. We return a
+    list with pairs of the generated names and their sizes.
+
+    If full_generation is True, then the file is also uncompressed to be
+    compressed also, to try more strategies.
+    '''
+    orig_pair = (orig_name, unconditional_stat(orig_name))
+    sizes = [orig_pair]
+    filename = orig_name
+
+    cmds = CMDS if full_generation else CMDS[1:]
+
+    for cmd, extra_ext in cmds:
+        new_filename = new_name(filename, extra_ext)
+
+        ret = process_pdf(cmd, filename, new_filename)
+        print('\n')
+
+        # Don't even bother with commands that didn't execute; also,
+        # subsequent commands depend on previous phases.  But there's an
+        # exception: qpdf exits with code 3 if a warning (not an error) is
+        # issued.
+        if (cmd[0] == 'qpdf' and ret.returncode not in (0, 3)
+            or (cmd[0] != 'qpdf' and ret.returncode != 0)):
+            break
+
+        new_size = unconditional_stat(new_filename)
+
+        sizes.append((new_filename, new_size))
+
+        filename = new_filename
+
+    return sizes
 
 
 # The main function of the program
 def main(args):
     # FIXME: Way too much repetition
     orig_name = args.filename
-    orig_size = unconditional_stat(orig_name)
+    orig_pair = (orig_name, unconditional_stat(orig_name))
 
-    orig_pair = (orig_name, orig_size)
-
-    sizes = [orig_pair]
-
-    filename = args.filename
-
-    for opts, extra_ext in CMDS:
-        ret = compress_pdf(opts, filename)
-        print('\n')
-
-        # Don't even bother with commands that didn't execute; also,
-        # subsequent commands depend on previous phases
-        if ret.returncode != 0:
-            break
-
-        filename, ext = os.path.splitext(filename)
-        new_filename = filename + extra_ext + ext
-        new_file_size = unconditional_stat(new_filename)
-
-        sizes.append((new_filename, new_file_size))
-
-        filename = new_filename
+    sizes = generate_candidates(orig_name, full_generation=args.decompress)
 
     sorted_list = sorted(sizes, key=lambda x: x[1])
     logging.debug('    **** sorted list: %s.', sorted_list)
@@ -164,6 +186,8 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Select "best" optimized version of a PDF file')
 
+    parser.add_argument('--decompress', action='store_true', default=False,
+                        help='decompress the input PDF before further processing')
     parser.add_argument('--verbose', action='store_true', default=False,
                         help='generate verbose output')
     parser.add_argument('--debug', action='store_true', default=False,
