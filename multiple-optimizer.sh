@@ -44,3 +44,8 @@ $OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes 
 $OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=yes --do-optimize-images=no "${1%%pdf}unc.pso.pdf"
 $OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=no --do-optimize-images=no "${1%%pdf}unc.pso.psom.pdf"
 
+# qpdf --stream-data=uncompress --compress-streams=n --decode-level=specialized --ii-min-bytes=0 --externalize-inline-images "$1" "${1%%pdf}no-inline.pdf"
+
+# $OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=no  "${1%%pdf}no-inline.pdf"
+# $OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=yes --do-optimize-images=no  "${1%%pdf}no-inline.pdf"
+# $OPTIMIZER --use-image-optimizer=$IMAGE_OPTIMIZERS --do-fast-bilevel-images=yes --use-multivalent=no --do-optimize-images=no  "${1%%pdf}no-inline.pdf"
