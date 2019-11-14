@@ -171,7 +171,8 @@ def main(args):
             unconditional_move(candidate, keeper_dir)
 
     if optimized is False:
-        # The best option was the original file...
+        # The best option was the original file (this includes the
+        # possibility of an error with pdfsizeopt)...
         done_dir = os.path.join(basedir, 'done')
         unconditional_mkdir(done_dir)
         unconditional_move(orig_name, done_dir)
