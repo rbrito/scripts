@@ -166,7 +166,7 @@ def main(args):
             pass
         else:
             # Some difference found; keep files for further inspection
-            keeper_dir = os.path.join(basedir, 'not-optimized')
+            keeper_dir = os.path.join(basedir, 'to-inspect-manually')
             unconditional_mkdir(keeper_dir)
             unconditional_move(candidate, keeper_dir)
 
