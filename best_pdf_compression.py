@@ -7,6 +7,8 @@ import os.path
 import shutil
 import subprocess
 import sys
+import tempfile
+
 
 COMPRESS_OPT = '--use-image-optimizer=pingo9,rbrito,jbig2'
 
@@ -18,8 +20,6 @@ CMDS = [
     ([CMD, COMPRESS_OPT, '--do-fast-bilevel-images=yes', '--use-multivalent=yes', '--do-optimize-images=no'], '.psom'),
     ([CMD, COMPRESS_OPT, '--do-fast-bilevel-images=yes', '--use-multivalent=no', '--do-optimize-images=no'], '.pso')
 ]
-TMPDIR = '/tmp/rbrito'
-
 
 # Some auxiliary functions to avoid dealing with exceptions
 def unconditional_mkdir(dirname):
@@ -211,11 +211,8 @@ if __name__ == '__main__':
     else:
         logging.basicConfig(level=logging.INFO)
 
-    # try:
-    #     os.mkdir(TMPDIR, mode=0o700)
-    # except FileExistsError:
-    #     pass
-    # # FIXME: Cleanup the TMP DIR if we fail somehow
-    # os.environ['TMPDIR'] = TMPDIR
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        logging.debug('    **** Temporary directory created: %s', tmpdirname)
+        os.environ['TMPDIR'] = tmpdirname
 
-    main(args)
+        main(args)
