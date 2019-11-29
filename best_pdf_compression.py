@@ -8,13 +8,15 @@ import shutil
 import subprocess
 import sys
 
+COMPRESS_OPT = '--use-image-optimizer=pingo9,rbrito,jbig2'
+
 
 CMD = os.path.expanduser('~/Downloads/pdfsizeopt/pdfsizeopt')
 CMDS = [
     (['qpdf', '--stream-data=uncompress', '--compress-streams=n', '--decode-level=specialized'], '.unc'),
-    ([CMD, '--use-image-optimizer=pingo9,rbrito,jbig2', '--do-fast-bilevel-images=yes', '--use-multivalent=no', '--do-optimize-images=yes'], '.pso'),
-    ([CMD, '--use-image-optimizer=pingo9,rbrito,jbig2', '--do-fast-bilevel-images=yes', '--use-multivalent=yes', '--do-optimize-images=no'], '.psom'),
-    ([CMD, '--use-image-optimizer=pingo9,rbrito,jbig2', '--do-fast-bilevel-images=yes', '--use-multivalent=no', '--do-optimize-images=no'], '.pso')
+    ([CMD, COMPRESS_OPT, '--do-fast-bilevel-images=yes', '--use-multivalent=no', '--do-optimize-images=yes'], '.pso'),
+    ([CMD, COMPRESS_OPT, '--do-fast-bilevel-images=yes', '--use-multivalent=yes', '--do-optimize-images=no'], '.psom'),
+    ([CMD, COMPRESS_OPT, '--do-fast-bilevel-images=yes', '--use-multivalent=no', '--do-optimize-images=no'], '.pso')
 ]
 TMPDIR = '/tmp/rbrito'
 
