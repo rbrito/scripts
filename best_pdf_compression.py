@@ -163,7 +163,7 @@ def main(args):
             # We clean up the remaining/unused candidates now
             break
 
-        elif ret.returncode in [1, 2]:
+        elif ret.returncode in (1, 2):
             # some error that the manpage of comparepdf doesn't specify what it is
             pass
         else:
