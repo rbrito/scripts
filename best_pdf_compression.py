@@ -209,7 +209,7 @@ if __name__ == '__main__':
     elif args.quiet:
         logging.basicConfig(level=logging.ERROR)
     else:
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(level=logging.DEBUG)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         logging.debug('    **** Temporary directory created: %s', tmpdirname)
