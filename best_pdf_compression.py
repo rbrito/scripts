@@ -124,7 +124,14 @@ def main(args):
     orig_name = args.filename
     orig_pair = (orig_name, unconditional_stat(orig_name))
 
-    sizes = generate_candidates(orig_name, full_generation=args.decompress)
+    sizes = generate_candidates(orig_name, full_generation=False)
+    if args.decompress:
+        print('\n')
+        sizes_uncompressed = generate_candidates(orig_name, full_generation=True)
+        uncompressed_candidates = sizes_uncompressed[1:]   # don't include original twice in sizes
+        sizes.extend(uncompressed_candidates)
+        print('\n')
+        logging.debug('    **** List of uncompressed candidates: %s.', uncompressed_candidates)
 
     sorted_list = sorted(sizes, key=lambda x: x[1])
     logging.debug('    **** sorted list: %s.', sorted_list)
@@ -132,6 +139,8 @@ def main(args):
     # Definitely remove the files that are bigger than the original (BUT NOT
     # THE ORIGINAL).
     orig_position = sorted_list.index(orig_pair)
+
+    logging.debug('    **** position of original: %d.', orig_position)
 
     candidates = sorted_list[:orig_position]
     list_to_remove = sorted_list[orig_position + 1:]
