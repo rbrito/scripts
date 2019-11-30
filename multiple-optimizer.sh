@@ -6,15 +6,19 @@ OPTIMIZER=~/Downloads/pdfsizeopt/pdfsizeopt
 
 case $1 in
     --help)
-        echo -e "$0 -{1,2,3,4,5} <input.pdf>\nLevel 3 is the default."
+        echo -e "$0 -{0,1,2,3,4,5} <input.pdf>\nLevel 3 is the default."
         exit 0
         ;;
-    -1)
+    -0)
         IMAGE_OPTIMIZERS=jbig2
         shift
         ;;
-    -2)
+    -1)
         IMAGE_OPTIMIZERS=rbrito0,jbig2
+        shift
+        ;;
+    -2)
+        IMAGE_OPTIMIZERS=pingo9,jbig2
         shift
         ;;
     -3)
