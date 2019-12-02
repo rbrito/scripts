@@ -110,7 +110,7 @@ def compare_pdfs(original, candidate):
     return subprocess.run(cmd)
 
 
-def new_name(in_filename, extra_ext):
+def insert_extension(in_filename, extra_ext):
     """
     Insert extra extension before last extension of filename.
     """
@@ -147,7 +147,7 @@ def generate_candidates(orig_name, full_generation=False):
     cmds = CMDS if full_generation else CMDS[1:]
 
     for cmd, extra_ext in cmds:
-        new_filename = new_name(filename, extra_ext)
+        new_filename = insert_extension(filename, extra_ext)
 
         ret = process_pdf(cmd, filename, new_filename)
         print('\n')
