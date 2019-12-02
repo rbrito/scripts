@@ -117,6 +117,7 @@ def new_name(in_filename, extra_ext):
     Insert extra extension before last extension of filename.
     """
     filename, ext = os.path.splitext(in_filename)
+
     return filename + extra_ext + ext
 
 
@@ -158,7 +159,7 @@ def generate_candidates(orig_name, full_generation=False):
         # exception: qpdf exits with code 3 if a warning (not an error) is
         # issued.
         if (cmd[0] == 'qpdf' and ret.returncode not in (0, 3)
-            or (cmd[0] != 'qpdf' and ret.returncode != 0)):
+                or (cmd[0] != 'qpdf' and ret.returncode != 0)):
             break
 
         new_size = force_stat(new_filename)
