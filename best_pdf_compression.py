@@ -1,5 +1,24 @@
 #!/usr/bin/env python3
 
+"""
+Program to reduce the size (optimize) PDF files by (almost) brute-force.
+
+It relies on many tools, like:
+
+* advancecomp
+* comparepdf
+* ghostscript (an old version with security issues)
+* jbig2
+* Multivalent.jar
+* optipng
+* pdfsizeopt
+* pingo
+* qpdf
+
+And possibly many other tools. The result varies, but it can produce very
+reasonable results from exhaustive optimizations.
+"""
+
 import argparse
 import logging
 import os
@@ -25,6 +44,14 @@ CMDS = [
 
 # Some auxiliary functions to avoid dealing with exceptions
 def unconditional_mkdir(dirname):
+    """
+    Unconditionally create a directory.
+
+    Silently create a directory, even if it already exists.
+
+    FIXME: Note that it currently doesn't check if the name is indeed of a
+    non-directory (socket, file, link etc.) or of a real directory.
+    """
     try:
         os.mkdir(dirname)
     except FileExistsError:
@@ -32,6 +59,11 @@ def unconditional_mkdir(dirname):
 
 
 def unconditional_move(src, dst):
+    """
+    Unconditionally move a file.
+
+    Move the file src to dst, (possibly overwriting dst).
+    """
     logging.debug('    **** Moving %s to %s.', src, dst)
     try:
         shutil.move(src, dst)
@@ -40,6 +72,11 @@ def unconditional_move(src, dst):
 
 
 def unconditional_stat(filename):
+    """
+    Unconditionally get the size of a file.
+
+    FIXME: This function should be renamed to reflect its real intent.
+    """
     try:
         file_size = os.stat(filename).st_size
     except FileNotFoundError:
@@ -50,6 +87,11 @@ def unconditional_stat(filename):
 
 
 def unconditional_unlink(filename):
+    """
+    Unconditionally remove a file.
+
+    We ignore the fact that the file may not exist anymore.
+    """
     logging.debug('    **** Removing %s.', filename)
     try:
         os.unlink(filename)
@@ -58,6 +100,9 @@ def unconditional_unlink(filename):
 
 
 def compare_pdfs(original, candidate):
+    """
+    Compare two PDF files for identical appearance.
+    """
     cmd = ['comparepdf', '--verbose=2', '--compare=appearance', original, candidate]
     logging.debug('    **** Comparing original %s with %s.', original, candidate)
     logging.debug('    **** Command line to execute: %s.', cmd)
@@ -66,6 +111,9 @@ def compare_pdfs(original, candidate):
 
 
 def new_name(in_filename, extra_ext):
+    """
+    Insert extra extension before last extension of filename.
+    """
     filename, ext = os.path.splitext(in_filename)
     return filename + extra_ext + ext
 
@@ -81,7 +129,7 @@ def process_pdf(cmd, in_filename, out_filename):
 
 
 def generate_candidates(orig_name, full_generation=False):
-    '''
+    """
     Generate various compressed versions of orig_name.
 
     Given a PDF file orig_name, we try many strategies (some "chained" on
@@ -90,7 +138,7 @@ def generate_candidates(orig_name, full_generation=False):
 
     If full_generation is True, then the file is also uncompressed to be
     compressed also, to try more strategies.
-    '''
+    """
     orig_pair = (orig_name, unconditional_stat(orig_name))
     sizes = [orig_pair]
     filename = orig_name
