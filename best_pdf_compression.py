@@ -73,14 +73,12 @@ def force_move(src, dst):
         logging.warning('    **** Exception: %s.', e)
 
 
-def force_stat(filename):
+def force_getsize(filename):
     """
     Unconditionally get the size of a file.
-
-    FIXME: This function should be renamed to reflect its real intent.
     """
     try:
-        file_size = os.stat(filename).st_size
+        file_size = os.path.getsize(filename)
     except FileNotFoundError:
         logging.error('    **** File %s not found.', filename)
         sys.exit(1)
@@ -142,7 +140,7 @@ def generate_candidates(orig_name, full_generation=False):
     If full_generation is True, then the file is also uncompressed to be
     compressed also, to try more strategies.
     """
-    orig_pair = (orig_name, force_stat(orig_name))
+    orig_pair = (orig_name, force_getsize(orig_name))
     sizes = [orig_pair]
     filename = orig_name
 
@@ -162,7 +160,7 @@ def generate_candidates(orig_name, full_generation=False):
                 or (cmd[0] != 'qpdf' and ret.returncode != 0)):
             break
 
-        new_size = force_stat(new_filename)
+        new_size = force_getsize(new_filename)
 
         sizes.append((new_filename, new_size))
 
@@ -175,7 +173,7 @@ def generate_candidates(orig_name, full_generation=False):
 def main(args):
     # FIXME: Way too much repetition
     orig_name = args.filename
-    orig_pair = (orig_name, force_stat(orig_name))
+    orig_pair = (orig_name, force_getsize(orig_name))
 
     sizes = generate_candidates(orig_name, full_generation=False)
     if args.decompress:
