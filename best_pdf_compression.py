@@ -42,8 +42,10 @@ CMDS = [
     ([PSO_CMD, COMPRESS_OPT, BILEVEL_OPT, MVALENT_OPT % 'no', IMAGE_OPT % 'no'], '.pso')
 ]
 
+
 # Some auxiliary functions to avoid dealing with exceptions
-def unconditional_mkdir(dirname):
+
+def force_mkdir(dirname):
     """
     Unconditionally create a directory.
 
@@ -58,7 +60,7 @@ def unconditional_mkdir(dirname):
         pass
 
 
-def unconditional_move(src, dst):
+def force_move(src, dst):
     """
     Unconditionally move a file.
 
@@ -71,7 +73,7 @@ def unconditional_move(src, dst):
         logging.warning('    **** Exception: %s.', e)
 
 
-def unconditional_stat(filename):
+def force_stat(filename):
     """
     Unconditionally get the size of a file.
 
@@ -86,7 +88,7 @@ def unconditional_stat(filename):
     return file_size
 
 
-def unconditional_unlink(filename):
+def force_unlink(filename):
     """
     Unconditionally remove a file.
 
@@ -139,7 +141,7 @@ def generate_candidates(orig_name, full_generation=False):
     If full_generation is True, then the file is also uncompressed to be
     compressed also, to try more strategies.
     """
-    orig_pair = (orig_name, unconditional_stat(orig_name))
+    orig_pair = (orig_name, force_stat(orig_name))
     sizes = [orig_pair]
     filename = orig_name
 
@@ -159,7 +161,7 @@ def generate_candidates(orig_name, full_generation=False):
             or (cmd[0] != 'qpdf' and ret.returncode != 0)):
             break
 
-        new_size = unconditional_stat(new_filename)
+        new_size = force_stat(new_filename)
 
         sizes.append((new_filename, new_size))
 
@@ -172,7 +174,7 @@ def generate_candidates(orig_name, full_generation=False):
 def main(args):
     # FIXME: Way too much repetition
     orig_name = args.filename
-    orig_pair = (orig_name, unconditional_stat(orig_name))
+    orig_pair = (orig_name, force_stat(orig_name))
 
     sizes = generate_candidates(orig_name, full_generation=False)
     if args.decompress:
@@ -199,7 +201,7 @@ def main(args):
     logging.debug('    **** List of candidates: %s.', candidates)
 
     for filename, _ in list_to_remove:
-        unconditional_unlink(filename)
+        force_unlink(filename)
 
     basedir, _ = os.path.split(orig_name)
 
@@ -212,11 +214,11 @@ def main(args):
             # Success !
             done_dir = os.path.join(basedir, 'done')
             orig_dir = os.path.join(basedir, 'orig')
-            unconditional_mkdir(done_dir)
-            unconditional_mkdir(orig_dir)
+            force_mkdir(done_dir)
+            force_mkdir(orig_dir)
 
-            unconditional_move(candidate, done_dir)
-            unconditional_move(orig_name, orig_dir)
+            force_move(candidate, done_dir)
+            force_move(orig_name, orig_dir)
 
             optimized = True
             # We clean up the remaining/unused candidates now
@@ -228,21 +230,21 @@ def main(args):
         else:
             # Some difference found; keep files for further inspection
             keeper_dir = os.path.join(basedir, 'to-inspect-visually')
-            unconditional_mkdir(keeper_dir)
-            unconditional_move(candidate, keeper_dir)
+            force_mkdir(keeper_dir)
+            force_move(candidate, keeper_dir)
 
     if optimized is False:
         # The best option was the original file (this includes the
         # possibility of an error with pdfsizeopt)...
         done_dir = os.path.join(basedir, 'done')
-        unconditional_mkdir(done_dir)
-        unconditional_move(orig_name, done_dir)
+        force_mkdir(done_dir)
+        force_move(orig_name, done_dir)
         logging.warning("    **** Couldn't optimize %s further.", orig_name)
 
     # Check the relationship of optimized == False/True vs. the remaining
     # of candidates
     for candidate, _ in candidates:
-        unconditional_unlink(candidate)
+        force_unlink(candidate)
 
 
 if __name__ == '__main__':
