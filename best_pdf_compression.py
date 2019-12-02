@@ -106,7 +106,7 @@ def compare_pdfs(original, candidate):
     Compare two PDF files for identical appearance.
     """
     cmd = ['comparepdf', '--verbose=2', '--compare=appearance', original, candidate]
-    logging.debug('    **** Comparing original %s with %s.', original, candidate)
+    logging.info('    **** Comparing original %s with %s.', original, candidate)
     logging.debug('    **** Command line to execute: %s.', cmd)
 
     return subprocess.run(cmd)
@@ -198,7 +198,7 @@ def main(args):
     list_to_remove = sorted_list[orig_position + 1:]
 
     logging.debug('    **** List to remove: %s.', list_to_remove)
-    logging.debug('    **** List of candidates: %s.', candidates)
+    logging.info('    **** List of candidates: %s.', candidates)
 
     for filename, _ in list_to_remove:
         force_unlink(filename)
@@ -270,7 +270,7 @@ if __name__ == '__main__':
     elif args.quiet:
         logging.basicConfig(level=logging.ERROR)
     else:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.INFO)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         logging.debug('    **** Temporary directory created: %s', tmpdirname)
