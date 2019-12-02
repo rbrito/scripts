@@ -10,15 +10,17 @@ import sys
 import tempfile
 
 
+PSO_CMD = os.path.expanduser('~/Downloads/pdfsizeopt/pdfsizeopt')
 COMPRESS_OPT = '--use-image-optimizer=pingo9,rbrito,jbig2'
 BILEVEL_OPT = '--do-fast-bilevel-images=yes'
+MVALENT_OPT = '--use-multivalent=%s'
+IMAGE_OPT = '--do-optimize-images=%s'
 
-CMD = os.path.expanduser('~/Downloads/pdfsizeopt/pdfsizeopt')
 CMDS = [
     (['qpdf', '--stream-data=uncompress', '--compress-streams=n', '--decode-level=specialized'], '.unc'),
-    ([CMD, COMPRESS_OPT, BILEVEL_OPT, '--use-multivalent=no', '--do-optimize-images=yes'], '.pso'),
-    ([CMD, COMPRESS_OPT, BILEVEL_OPT, '--use-multivalent=yes', '--do-optimize-images=no'], '.psom'),
-    ([CMD, COMPRESS_OPT, BILEVEL_OPT, '--use-multivalent=no', '--do-optimize-images=no'], '.pso')
+    ([PSO_CMD, COMPRESS_OPT, BILEVEL_OPT, MVALENT_OPT % 'no', IMAGE_OPT % 'yes'], '.pso'),
+    ([PSO_CMD, COMPRESS_OPT, BILEVEL_OPT, MVALENT_OPT % 'yes', IMAGE_OPT % 'no'], '.psom'),
+    ([PSO_CMD, COMPRESS_OPT, BILEVEL_OPT, MVALENT_OPT % 'no', IMAGE_OPT % 'no'], '.pso')
 ]
 
 # Some auxiliary functions to avoid dealing with exceptions
