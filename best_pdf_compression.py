@@ -69,8 +69,8 @@ def force_move(src, dst):
     logging.info('    **** Moving %s to %s.', src, dst)
     try:
         shutil.move(src, dst)
-    except shutil.Error as e:
-        logging.warning('    **** Exception: %s.', e)
+    except shutil.Error as exc:
+        logging.warning('    **** Exception: %s.', exc)
 
 
 def force_getsize(filename):
