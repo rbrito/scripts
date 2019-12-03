@@ -140,8 +140,7 @@ def generate_candidates(orig_name, full_generation=False):
     If full_generation is True, then the file is also uncompressed to be
     compressed also, to try more strategies.
     """
-    orig_pair = (orig_name, force_getsize(orig_name))
-    sizes = [orig_pair]
+    sizes = []
     filename = orig_name
 
     cmds = CMDS if full_generation else CMDS[1:]
@@ -178,11 +177,17 @@ def main(args):
     sizes = generate_candidates(orig_name, full_generation=False)
     if args.decompress:
         print('\n')
-        sizes_uncompressed = generate_candidates(orig_name, full_generation=True)
-        uncompressed_candidates = sizes_uncompressed[1:]   # don't include original twice in sizes
+        uncompressed_candidates = generate_candidates(orig_name, full_generation=True)
         sizes.extend(uncompressed_candidates)
         print('\n')
         logging.debug('    **** List of uncompressed candidates: %s.', uncompressed_candidates)
+
+    # Include original to know which files to remove, by sorting by size;
+    # everything bigger than the original doesn't interest to us. Since
+    # Python's sort is stable, we insert the original pair at the beginning
+    # (not at the end, with an append), so that we eliminate even those
+    # files whose sizes match the size of the original file.
+    sizes.insert(0, orig_pair)
 
     sorted_list = sorted(sizes, key=lambda x: x[1])
     logging.debug('    **** sorted list: %s.', sorted_list)
