@@ -59,7 +59,6 @@ def force_mkdir(dirname):
     except FileExistsError:
         pass
 
-
 def force_move(src, dst):
     """
     Unconditionally move a file.
@@ -160,7 +159,6 @@ def generate_candidates(orig_name, full_generation=False):
             break
 
         new_size = force_getsize(new_filename)
-
         sizes.append((new_filename, new_size))
 
         filename = new_filename
