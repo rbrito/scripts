@@ -66,7 +66,7 @@ def force_move(src, dst):
 
     Move the file src to dst, (possibly overwriting dst).
     """
-    logging.debug('    **** Moving %s to %s.', src, dst)
+    logging.info('    **** Moving %s to %s.', src, dst)
     try:
         shutil.move(src, dst)
     except shutil.Error as e:
@@ -92,7 +92,7 @@ def force_unlink(filename):
 
     We ignore the fact that the file may not exist anymore.
     """
-    logging.debug('    **** Removing %s.', filename)
+    logging.info('    **** Removing %s.', filename)
     try:
         os.unlink(filename)
     except FileNotFoundError:
