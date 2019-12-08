@@ -40,6 +40,14 @@ undesired_names = [
 ]
 
 
+def delete_javascript(obj, num):
+    if ('/JS' in obj) and ('/S' in obj):
+        del obj['/JS']
+        del obj['/S']
+
+        print('    **** Removed Javascript from obj %d.' % num)
+
+
 def delete_name(obj, name, num=None):
     # if num is not None:
     #     print('    **** Object %s, Name: %s, objnum: %d.' % (type(obj), name, num))
@@ -67,6 +75,9 @@ if __name__ == '__main__':
 
         for name in undesired_names:
             delete_name(cur_obj, name, i)
+
+        delete_javascript(cur_obj, i)
+
 
     # Remove from the document
     for name in undesired_names:
