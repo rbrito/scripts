@@ -75,6 +75,19 @@ if __name__ == '__main__':
     # FIXME: This doesn't seem to work
     delete_name(my_pdf.root, '/Info')
 
+    # FIXME: This does
+    delete_name(my_pdf.trailer, '/Info', -2)
+
+    ## FIXME: The following may be useless with the deletion above
+
+    # Remove the only /Title that we want
+    delete_name(my_pdf.docinfo, '/Title', -1)
+    delete_name(my_pdf.docinfo, '/OpenAction', -1)
+
+    # Remove any other stuff from the docinfo dictionary
+    for key in my_pdf.docinfo.keys():
+        delete_name(my_pdf.docinfo, key, -1)
+
     # FIXME: Perhaps use pdfsizeopt instead?
-    my_pdf.remove_unreferenced_resources()
+    # my_pdf.remove_unreferenced_resources()
     my_pdf.save(os.path.splitext(sys.argv[1])[0] + '.clean.pdf')
