@@ -7,7 +7,6 @@ import sys
 import tempfile
 
 import pikepdf
-from pikepdf import PdfImage
 
 # Set the logging level
 logging.basicConfig(level=logging.DEBUG)
