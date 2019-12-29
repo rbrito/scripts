@@ -6,7 +6,7 @@ import sys
 import pikepdf
 
 
-undesired_names = [
+UNDESIRED_NAMES = [
     # From the infodict
     '/AcroForm',
     '/Author',
@@ -73,14 +73,13 @@ if __name__ == '__main__':
                           (pikepdf.objects.Object, pikepdf.Stream)):
             continue
 
-        for name in undesired_names:
+        for name in UNDESIRED_NAMES:
             delete_name(cur_obj, name, i)
 
         delete_javascript(cur_obj, i)
 
-
     # Remove from the document
-    for name in undesired_names:
+    for name in UNDESIRED_NAMES:
         delete_name(my_pdf.root, name)
 
     # FIXME: This doesn't seem to work
