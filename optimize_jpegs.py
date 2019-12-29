@@ -8,46 +8,59 @@ import tempfile
 
 import pikepdf
 
-# Set the logging level
-logging.basicConfig(level=logging.DEBUG)
 
-my_pdf = pikepdf.open(sys.argv[1])
+def main(tmpdirname, my_pdf):
+    my_pdf = pikepdf.open(sys.argv[1])
 
-for page in my_pdf.pages:
-    for image in page.images.keys():
-        image_obj = page.images[image]
+    for obj in my_pdf.objects:
 
-        if '/Filter' not in image_obj:
-            continue
-        if image_obj.Filter != '/DCTDecode':
-            continue
-        if image_obj.ColorSpace not in ('/DeviceRGB', '/DeviceGray'):
-            continue
+        # Not elegant, but (hopefully) will be made so in the near future
+        if isinstance(obj, pikepdf.Stream) and '/Subtype' in obj and obj['/Subtype'] == '/Image':
+            image_obj = obj
 
-        logging.debug('Found a JPEG as %s', image_obj.ColorSpace)
+            if '/Filter' not in image_obj:
+                continue
+            if image_obj.Filter != '/DCTDecode':
+                continue
+            if image_obj.ColorSpace not in ('/DeviceRGB', '/DeviceGray'):
+                continue
 
-        tempname = '/tmp/foobarbaz.jpg'  # FIXME: change this
-        source = open(tempname, 'wb')
+            logging.debug('Found a JPEG as %s', image_obj.ColorSpace)
 
-        ret = source.write(image_obj.read_raw_bytes())
-        logging.info('Wrote %d bytes to the tempfile %s.', ret, tempname)
-        source.close()
+            tempname = os.path.join(tmpdirname, 'foobarbaz.jpg')  # FIXME: change this
+            source = open(tempname, 'wb')
 
-        # print('Calling jpgcrush...')
-        ret = subprocess.call(['jpgcrush', tempname])
-        # print('Return code was: %d.' % ret)
+            ret = source.write(image_obj.read_raw_bytes())
+            logging.info('Wrote %d bytes to the tempfile %s.', ret, tempname)
+            source.close()
 
-        logging.info('Calling jhead...')
-        ret = subprocess.call(['jhead', '-purejpg', source.name])
-        # print('Return code was: %d.' % ret)
+            # print('Calling jpgcrush...')
+            ret = subprocess.call(['jpgcrush', tempname])
+            # print('Return code was: %d.' % ret)
 
-        targetfn = open(tempname, 'rb')
-        target = targetfn.read()
-        logging.info('Read back %d bytes from the tempfile.', len(target))
-        image_obj.write(target, filter=pikepdf.Name('/DCTDecode'))
-        logging.info('The image is back on the PDF file.')
+            # Unfortunatel, the -purejpg of jhead is too aggressive and may
+            # strip way too much to the point of modifying the image, in some
+            # cases.
+            logging.info('Calling jhead...')
+            ret = subprocess.call(['jhead', '-dt', '-dc', '-de', source.name])
+            # print('Return code was: %d.' % ret)
 
-logging.debug('going to save the file')
-my_pdf.save(os.path.splitext(sys.argv[1])[0] + '.jpg.pdf')
+            targetfn = open(tempname, 'rb')
+            target = targetfn.read()
+            logging.info('Read back %d bytes from the tempfile.', len(target))
+            image_obj.write(target, filter=pikepdf.Name('/DCTDecode'))
+            logging.info('The image is back on the PDF file.')
 
-my_pdf.close()
+    logging.debug('going to save the file')
+    my_pdf.save(os.path.splitext(sys.argv[1])[0] + '.jpg.pdf')
+
+    my_pdf.close()
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        logging.debug('    **** Temporary directory created: %s', tmpdirname)
+        os.environ['TMPDIR'] = tmpdirname
+        main(tmpdirname, sys.argv[1])
