@@ -173,7 +173,7 @@ def main(args):
     orig_pair = (orig_name, force_getsize(orig_name))
 
     sizes = generate_candidates(orig_name, full_generation=False)
-    if args.decompress:
+    if args.recompress:
         print('\n')
         uncompressed_candidates = generate_candidates(orig_name, full_generation=True)
         sizes.extend(uncompressed_candidates)
@@ -252,7 +252,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Select "best" optimized version of a PDF file')
 
-    parser.add_argument('--decompress', action='store_true', default=False,
+    parser.add_argument('--recompress', action='store_true', default=False,
                         help='decompress the input PDF before further processing')
     parser.add_argument('--verbose', action='store_true', default=False,
                         help='generate verbose output')
