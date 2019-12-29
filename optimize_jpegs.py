@@ -20,8 +20,14 @@ def main(tmpdirname, my_pdf):
 
             if '/Filter' not in image_obj:
                 continue
-            if image_obj.Filter != '/DCTDecode':
+
+            # FIXME: to improve *a lot*
+            if (image_obj.Filter != '/DCTDecode' and
+               not (isinstance(image_obj.Filter, pikepdf.Array) and
+                    len(image_obj.Filter) == 1 and
+                    image_obj.Filter[0] == '/DCTDecode')):
                 continue
+
             if image_obj.ColorSpace not in ('/DeviceRGB', '/DeviceGray'):
                 continue
 
