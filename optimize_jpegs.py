@@ -9,8 +9,11 @@ import tempfile
 import pikepdf
 
 
-def main(tmpdirname, my_pdf):
-    my_pdf = pikepdf.open(sys.argv[1])
+
+def main(tmpdirname, pdf_name):
+    total_savings = 0
+
+    my_pdf = pikepdf.open(pdf_name)
 
     for obj in my_pdf.objects:
 
@@ -36,8 +39,8 @@ def main(tmpdirname, my_pdf):
             tempname = os.path.join(tmpdirname, 'foobarbaz.jpg')  # FIXME: change this
             source = open(tempname, 'wb')
 
-            ret = source.write(image_obj.read_raw_bytes())
-            logging.info('Wrote %d bytes to the tempfile %s.', ret, tempname)
+            size_before = source.write(image_obj.read_raw_bytes())
+            logging.debug('Wrote %d bytes to the tempfile %s.', size_before, tempname)
             source.close()
 
             # print('Calling jpgcrush...')
@@ -53,18 +56,23 @@ def main(tmpdirname, my_pdf):
 
             targetfn = open(tempname, 'rb')
             target = targetfn.read()
-            logging.info('Read back %d bytes from the tempfile %s.', len(target), tempname)
+
+            size_after = len(target)
+            logging.debug('Read back %d bytes from the tempfile %s.', size_after, tempname)
             image_obj.write(target, filter=pikepdf.Name('/DCTDecode'))
             logging.debug('The image is back on the PDF file.')
 
-    logging.debug('going to save the file')
-    my_pdf.save(os.path.splitext(sys.argv[1])[0] + '.jpg.pdf')
+            total_savings += size_before - size_after
+
+    final_filename = os.path.splitext(pdf_name)[0] + '.jpg.pdf'
+    logging.info('Saved %d bytes to create %s.', total_savings, final_filename)
+    my_pdf.save(final_filename)
 
     my_pdf.close()
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.WARN)
+    logging.basicConfig(level=logging.INFO)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         logging.debug('    **** Temporary directory created: %s', tmpdirname)
