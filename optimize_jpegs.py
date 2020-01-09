@@ -8,6 +8,20 @@ import tempfile
 
 import pikepdf
 
+# FIXME: Use the progress bar when we suppress the output of forked
+# commands.
+#
+# Forking is, of course, very expensive and, at least, jpgcrush uses a Perl
+# process that interprets code that also forks processes, making everything
+# very expensive.
+#
+# FIXME: To use a progress bar with tqdm and avoid output from being messed
+# up, we can steal code from ocrmypdf, since it has a wrapper around tqdm
+# that allows output generation and not losing the bar.
+#
+# from tqdm import tqdm
+
+
 # Generator to make the following code more pythonic
 def image_objects(pdf):
     for obj in pdf.objects:
@@ -20,6 +34,7 @@ def main(tmpdirname, pdf_name):
 
     my_pdf = pikepdf.open(pdf_name)
 
+    # for obj in tqdm(image_objects(my_pdf)):
     for image_obj in image_objects(my_pdf):
 
         if '/Filter' not in image_obj:
