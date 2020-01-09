@@ -30,6 +30,7 @@ import tempfile
 
 
 PSO_CMD = os.path.expanduser('~/Downloads/pdfsizeopt/pdfsizeopt')
+# COMPRESS_OPT = '--use-image-optimizer=pingo9,rbrito,zopflipng,advdef3,jbig2'
 COMPRESS_OPT = '--use-image-optimizer=pingo9,rbrito,jbig2'
 BILEVEL_OPT = '--do-fast-bilevel-images=yes'
 MVALENT_OPT = '--use-multivalent=%s'
@@ -58,6 +59,7 @@ def force_mkdir(dirname):
         os.mkdir(dirname)
     except FileExistsError:
         pass
+
 
 def force_move(src, dst):
     """
