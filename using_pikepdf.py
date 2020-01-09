@@ -62,8 +62,15 @@ if __name__ == '__main__':
 
     num_of_objects = my_pdf.trailer['/Size']  # this includes the object 0
 
+    # FIXME: somehow, using enumerate seems slower, when profiling with a large file:
+    #
+    # perf stat --repeat=10 using_pikepdf.py \
+    # katz-lindell-introduction-to-modern-cryptography.pso.pdfa.unc.pso.pso.pdf
+
     # Traverse all the objects
     for i in range(1, num_of_objects):
+    # for i, cur_obj in enumerate(my_pdf.objects):
+
         cur_obj = my_pdf.get_object(i, 0)
 
         # Stuff that doesn't contain keys
