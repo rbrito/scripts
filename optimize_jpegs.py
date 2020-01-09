@@ -47,15 +47,15 @@ def main(tmpdirname, my_pdf):
             # Unfortunatel, the -purejpg of jhead is too aggressive and may
             # strip way too much to the point of modifying the image, in some
             # cases.
-            logging.info('Calling jhead...')
+            logging.debug('Calling jhead...')
             ret = subprocess.call(['jhead', '-dt', '-dc', '-de', source.name])
             # print('Return code was: %d.' % ret)
 
             targetfn = open(tempname, 'rb')
             target = targetfn.read()
-            logging.info('Read back %d bytes from the tempfile.', len(target))
+            logging.info('Read back %d bytes from the tempfile %s.', len(target), tempname)
             image_obj.write(target, filter=pikepdf.Name('/DCTDecode'))
-            logging.info('The image is back on the PDF file.')
+            logging.debug('The image is back on the PDF file.')
 
     logging.debug('going to save the file')
     my_pdf.save(os.path.splitext(sys.argv[1])[0] + '.jpg.pdf')
@@ -64,7 +64,7 @@ def main(tmpdirname, my_pdf):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.WARN)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         logging.debug('    **** Temporary directory created: %s', tmpdirname)
