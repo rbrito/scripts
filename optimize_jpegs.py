@@ -19,7 +19,30 @@ import pikepdf
 # up, we can steal code from ocrmypdf, since it has a wrapper around tqdm
 # that allows output generation and not losing the bar.
 #
+
+
 # from tqdm import tqdm
+
+# # Stolen from ocrmypdf
+# class TqdmConsole:
+#     """Wrapper to log messages in a way that is compatible with tqdm progress bar"""
+
+#     def __init__(self, file):
+#         self.file = file
+#         self.py36 = sys.version_info[0:2] == (3, 6)
+
+#     def write(self, msg):
+#         # When no progress bar is active, tqdm.write() routes to print()
+#         if self.py36:
+#             if msg.strip() != '':
+#                 tqdm.write(msg.rstrip(), end='\n', file=self.file)
+#         else:
+#             tqdm.write(msg.rstrip(), end='\n', file=self.file)
+
+#     def flush(self):
+#         if hasattr(self.file, "flush"):
+#             self.file.flush()
+
 
 
 # Generator to make the following code more pythonic
@@ -34,7 +57,7 @@ def main(tmpdirname, pdf_name):
 
     my_pdf = pikepdf.open(pdf_name)
 
-    # for obj in tqdm(image_objects(my_pdf)):
+    # for image_obj in tqdm(image_objects(my_pdf)):
     for image_obj in image_objects(my_pdf):
 
         if '/Filter' not in image_obj:
@@ -63,7 +86,7 @@ def main(tmpdirname, pdf_name):
         subprocess.check_call(['jpgcrush', tempname])
         # print('Return code was: %d.' % ret)
 
-        # Unfortunatel, the -purejpg of jhead is too aggressive and may
+        # Unfortunately, the -purejpg of jhead is too aggressive and may
         # strip way too much to the point of modifying the image, in some
         # cases.
         logging.debug('Calling jhead...')
