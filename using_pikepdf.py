@@ -59,8 +59,10 @@ def delete_name(obj, name, num=None):
             print('    **** Removed name: %s from obj %d.' % (name, num))
 
 
-if __name__ == '__main__':
-    my_pdf = pikepdf.open(sys.argv[1])
+def delete_metadata(filename):
+    print(f'Processing {filename}')
+
+    my_pdf = pikepdf.open(filename)
 
     num_of_objects = my_pdf.trailer['/Size']  # this includes the object 0
 
@@ -109,4 +111,9 @@ if __name__ == '__main__':
 
     # FIXME: Perhaps use pdfsizeopt instead?
     # my_pdf.remove_unreferenced_resources()
-    my_pdf.save(os.path.splitext(sys.argv[1])[0] + '.clean.pdf')
+    my_pdf.save(os.path.splitext(filename)[0] + '.clean.pdf')
+
+
+if __name__ == '__main__':
+    for filename in sys.argv[1:]:
+        delete_metadata(filename)
