@@ -70,7 +70,10 @@ def main(tmpdirname, pdf_name):
                 image_obj.Filter[0] == '/DCTDecode')):
             continue
 
-        if image_obj.ColorSpace not in ('/DeviceRGB', '/DeviceGray'):
+        if not (image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray') or
+                (isinstance(image_obj.ColorSpace, pikepdf.Array) and
+                 image_obj.ColorSpace[0] == '/DeviceN' and image_obj.ColorSpace[2] in
+                 ('/DeviceRGB', '/DeviceGray'))):
             continue
 
         logging.debug('Found a JPEG as %s', image_obj.ColorSpace)
