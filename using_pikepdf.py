@@ -18,6 +18,8 @@ UNDESIRED_NAMES = [
     '/Subject',
     '/ViewerPreferences',
 
+    # '/OCProperties',  # Optional Content (sometimes, hidden, sometimes not)
+
     # Date stuff
     '/LastModified',
     '/ModDate',
