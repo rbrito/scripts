@@ -55,6 +55,8 @@ def image_objects(pdf):
 def main(tmpdirname, pdf_name):
     total_savings = 0
 
+    logging.info('Processing %s.', pdf_name)
+
     my_pdf = pikepdf.open(pdf_name)
 
     # for image_obj in tqdm(image_objects(my_pdf)):
@@ -116,7 +118,8 @@ def main(tmpdirname, pdf_name):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        logging.debug('    **** Temporary directory created: %s', tmpdirname)
-        os.environ['TMPDIR'] = tmpdirname
-        main(tmpdirname, sys.argv[1])
+    for filename in sys.argv[1:]:
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            logging.debug('    **** Temporary directory created: %s', tmpdirname)
+            os.environ['TMPDIR'] = tmpdirname
+            main(tmpdirname, filename)
