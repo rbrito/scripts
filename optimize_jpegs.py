@@ -106,12 +106,12 @@ def main(tmpdirname, pdf_name):
         subprocess.check_call(['jpgcrush', tempname])
         # print('Return code was: %d.' % ret)
 
-        # Unfortunately, the -purejpg of jhead is too aggressive and may
-        # strip way too much to the point of modifying the image, in some
-        # cases.
-        logging.debug('Calling jhead...')
-        subprocess.check_call(['jhead', '-dt', '-dc', '-de', source.name])
-        # print('Return code was: %d.' % ret)
+        # # Unfortunately, the -purejpg of jhead is too aggressive and may
+        # # strip way too much to the point of modifying the image, in some
+        # # cases.
+        # logging.debug('Calling jhead...')
+        # subprocess.check_call(['jhead', '-dt', '-dc', '-de', source.name])
+        # # print('Return code was: %d.' % ret)
 
         targetfn = open(tempname, 'rb')
         target = targetfn.read()
