@@ -44,6 +44,13 @@ import pikepdf
 #             self.file.flush()
 
 
+# Brute-force determination of the number of (non-inlined) images in the
+# file. Ideally, this should be supported by pikepdf, but it currently
+# isn't, AFAIK.
+def num_image_objects(pdf):
+    return sum(1 for obj in pdf.objects if isinstance(obj, pikepdf.Stream)
+               and '/Subtype' in obj and obj['/Subtype'] == '/Image')
+
 
 # Generator to make the following code more pythonic
 def image_objects(pdf):
