@@ -86,6 +86,13 @@ def main(tmpdirname, pdf_name):
                  ('/DeviceRGB', '/DeviceGray'))):
             continue
 
+        # FIXME: Enable this code to process more images
+        # if not (image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray') or
+        #         (isinstance(image_obj.ColorSpace, pikepdf.Array) and
+        #          image_obj.ColorSpace[0] == '/ICCBased' and str(image_obj.ColorSpace[1].Alternate) in
+        #          ('/DeviceRGB', '/DeviceGray'))):
+        #     continue
+
         logging.debug('Found a JPEG as %s', image_obj.ColorSpace)
 
         tempname = os.path.join(tmpdirname, 'foobarbaz.jpg')  # FIXME: change this
