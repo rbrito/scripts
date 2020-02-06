@@ -66,7 +66,8 @@ def main(tmpdirname, pdf_name):
 
     my_pdf = pikepdf.open(pdf_name)
 
-    # for image_obj in tqdm(image_objects(my_pdf)):
+    # total_objs = num_image_objects(mypdf)
+    # for image_obj in tqdm(image_objects(my_pdf), total=total_objs):
     for image_obj in image_objects(my_pdf):
 
         if '/Filter' not in image_obj:
