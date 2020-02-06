@@ -75,9 +75,9 @@ def main(tmpdirname, pdf_name):
 
         # FIXME: to improve *a lot*
         if (image_obj.Filter != '/DCTDecode' and
-           not (isinstance(image_obj.Filter, pikepdf.Array) and
-                len(image_obj.Filter) == 1 and
-                image_obj.Filter[0] == '/DCTDecode')):
+            not (isinstance(image_obj.Filter, pikepdf.Array) and
+                 len(image_obj.Filter) == 1 and
+                 image_obj.Filter[0] == '/DCTDecode')):
             continue
 
         if not (image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray') or
