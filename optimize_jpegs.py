@@ -66,6 +66,7 @@ def main(tmpdirname, pdf_name):
 
     my_pdf = pikepdf.open(pdf_name)
 
+    img_num = 0
     # total_objs = num_image_objects(mypdf)
     # for image_obj in tqdm(image_objects(my_pdf), total=total_objs):
     for image_obj in image_objects(my_pdf):
@@ -93,9 +94,10 @@ def main(tmpdirname, pdf_name):
         #          ('/DeviceRGB', '/DeviceGray'))):
         #     continue
 
+        img_num += 1
         logging.debug('Found a JPEG as %s', image_obj.ColorSpace)
 
-        tempname = os.path.join(tmpdirname, 'foobarbaz.jpg')  # FIXME: change this
+        tempname = os.path.join(tmpdirname, f'img-{img_num:05d}.jpg')
         source = open(tempname, 'wb')
 
         size_before = source.write(image_obj.read_raw_bytes())
