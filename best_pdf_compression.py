@@ -93,7 +93,7 @@ def force_unlink(filename):
 
     We ignore the fact that the file may not exist anymore.
     """
-    logging.info('    **** Removing %s.', filename)
+    logging.debug('    **** Removing %s.', filename)
     try:
         os.unlink(filename)
     except FileNotFoundError:
