@@ -39,6 +39,9 @@ UNDESIRED_NAMES = [
 
     # From pages
     '/Thumb',
+
+    # From other software
+    '/ITXT',
 ]
 
 
