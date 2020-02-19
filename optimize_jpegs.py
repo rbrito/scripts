@@ -59,6 +59,35 @@ def image_objects(pdf):
             yield obj
 
 
+def singleton_dct_in_array(image_obj):
+    imgfilter = image_obj.Filter
+
+    return (isinstance(imgfilter, pikepdf.Array) and
+            len(imgfilter) == 1 and
+            imgfilter[0] == '/DCTDecode')
+
+
+def vanilla_colorspaces(image_obj):
+    return image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray')
+
+
+def devn_colorspaces(image_obj):
+    colorspace = image_obj.ColorSpace
+
+    return (isinstance(colorspace, pikepdf.Array) and
+            colorspace[0] == '/DeviceN' and
+            (colorspace[2] in ('/DeviceRGB', '/DeviceGray')))
+
+
+def icc_colorspaces(image_obj):
+    colorspace = image_obj.ColorSpace
+
+    return (isinstance(colorspace, pikepdf.Array) and
+            colorspace[0] == '/ICCBased' and
+            (len(colorspace) >= 2 and (('/Alternate' not in colorspace[1]) or
+                                       (str(colorspace[1].Alternate) in ('/DeviceRGB', '/DeviceGray')))))
+
+
 def main(tmpdirname, pdf_name):
     total_savings = 0
 
