@@ -29,7 +29,7 @@ def num_image_objects(pdf):
                and '/Subtype' in obj and obj['/Subtype'] == '/Image')
 
 
-# Generator to make the following code more pythonic
+# Generator to iterate over (non-inlined) image objects more pythonic
 def image_objects(pdf):
     for obj in pdf.objects:
         if isinstance(obj, pikepdf.Stream) and '/Subtype' in obj and obj['/Subtype'] == '/Image':
@@ -87,11 +87,15 @@ def main(tmpdirname, pdf_name):
                  image_obj.Filter[0] == '/DCTDecode')):
             continue
 
-        if not (image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray') or
-                (isinstance(image_obj.ColorSpace, pikepdf.Array) and
-                 image_obj.ColorSpace[0] == '/DeviceN' and image_obj.ColorSpace[2] in
-                 ('/DeviceRGB', '/DeviceGray'))):
+        # Unfortunately, jpgcrush only works with RGB or grayscale images.
+        if image_obj.ColorSpace == '/DeviceCMYK':
             continue
+
+        # if not (image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray') or
+        #         (isinstance(image_obj.ColorSpace, pikepdf.Array) and
+        #          image_obj.ColorSpace[0] == '/DeviceN' and image_obj.ColorSpace[2] in
+        #          ('/DeviceRGB', '/DeviceGray'))):
+        #     continue
 
         # FIXME: Enable this code to process more images
         # if not (image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray') or
