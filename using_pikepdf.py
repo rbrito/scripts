@@ -63,12 +63,9 @@ def delete_javascript(obj, num):
 
 
 def delete_name(obj, name, num=None):
-    # if num is not None:
-    #     print('    **** Object %s, Name: %s, objnum: %d.' % (type(obj), name, num))
-
-        if name in obj:
-            del obj[name]
-            print('    **** Removed name: %s from obj %d.' % (name, num))
+    if name in obj:
+        del obj[name]
+        print('    **** Removed name: %s from obj %d.' % (name, num))
 
 
 def delete_metadata(filename):
