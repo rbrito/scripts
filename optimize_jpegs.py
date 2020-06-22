@@ -132,7 +132,7 @@ def main(tmpdirname, pdf_name):
         total_savings += size_before - size_after
 
     final_filename = os.path.splitext(pdf_name)[0] + '.jpg.pdf'
-    logging.info('Saved %d bytes to create %s.', total_savings, final_filename)
+    logging.info('Saved %d bytes to create %s', total_savings, final_filename)
     my_pdf.save(final_filename)
 
     my_pdf.close()
