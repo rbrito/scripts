@@ -21,29 +21,6 @@ import pikepdf
 #
 
 
-# from tqdm import tqdm
-
-# # Stolen from ocrmypdf
-# class TqdmConsole:
-#     """Wrapper to log messages in a way that is compatible with tqdm progress bar"""
-
-#     def __init__(self, file):
-#         self.file = file
-#         self.py36 = sys.version_info[0:2] == (3, 6)
-
-#     def write(self, msg):
-#         # When no progress bar is active, tqdm.write() routes to print()
-#         if self.py36:
-#             if msg.strip() != '':
-#                 tqdm.write(msg.rstrip(), end='\n', file=self.file)
-#         else:
-#             tqdm.write(msg.rstrip(), end='\n', file=self.file)
-
-#     def flush(self):
-#         if hasattr(self.file, "flush"):
-#             self.file.flush()
-
-
 # Brute-force determination of the number of (non-inlined) images in the
 # file. Ideally, this should be supported by pikepdf, but it currently
 # isn't, AFAIK.
