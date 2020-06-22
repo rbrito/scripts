@@ -17,12 +17,16 @@ UNDESIRED_NAMES = [
     '/Producer',
     '/Subject',
     '/ViewerPreferences',
+    '/Lang',
+    '/Info',
+    '/PageLayout',
 
     # '/OCProperties',  # Optional Content (sometimes, hidden, sometimes not)
 
     # Date stuff
     '/LastModified',
     '/ModDate',
+    '/M',  # FIXME: probably only removed from annotations
 
     # pdftex stuff
     '/PTEX.Fullbanner',
@@ -42,6 +46,10 @@ UNDESIRED_NAMES = [
 
     # From other software
     '/ITXT',
+    '/Lambkin',
+
+    # Embedded files
+    '/EmbeddedFiles'
 ]
 
 
