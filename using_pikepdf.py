@@ -65,6 +65,7 @@ def delete_name(obj, name, num=None):
 def delete_metadata(filename):
     print(f'Processing {filename}')
 
+    original_size = os.path.getsize(filename)
     my_pdf = pikepdf.open(filename)
 
     num_of_objects = my_pdf.trailer['/Size']  # this includes the object 0
@@ -113,8 +114,15 @@ def delete_metadata(filename):
         delete_name(my_pdf.docinfo, key, -1)
 
     # FIXME: Perhaps use pdfsizeopt instead?
-    # my_pdf.remove_unreferenced_resources()
-    my_pdf.save(os.path.splitext(filename)[0] + '.clean.pdf')
+    my_pdf.remove_unreferenced_resources()
+
+    final_filename = os.path.splitext(filename)[0] + '.clean.pdf'
+    my_pdf.save(final_filename, fix_metadata_version=False)
+
+    final_size = os.path.getsize(final_filename)
+    total_savings = original_size - final_size
+
+    print('Saved %d bytes to create %s' % (total_savings, final_filename))
 
 
 if __name__ == '__main__':
