@@ -114,16 +114,12 @@ def main(tmpdirname, pdf_name):
         logging.debug('Wrote %d bytes to the tempfile %s.', size_before, tempname)
         source.close()
 
-        # print('Calling jpgcrush...')
         subprocess.check_call(['jpgcrush', tempname])
-        # print('Return code was: %d.' % ret)
 
-        # # Unfortunately, the -purejpg of jhead is too aggressive and may
-        # # strip way too much to the point of modifying the image, in some
-        # # cases.
-        # logging.debug('Calling jhead...')
-        # subprocess.check_call(['jhead', '-dt', '-dc', '-de', source.name])
-        # # print('Return code was: %d.' % ret)
+        # Unfortunately, the -purejpg of jhead is too aggressive and may
+        # strip way too much to the point of modifying the image, in some
+        # cases.
+        subprocess.check_call(['jhead', '-dt', '-dc', '-de', source.name])
 
         targetfn = open(tempname, 'rb')
         target = targetfn.read()
