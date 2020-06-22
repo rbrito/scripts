@@ -82,16 +82,15 @@ def delete_metadata(filename):
     # katz-lindell-introduction-to-modern-cryptography.pso.pdfa.unc.pso.pso.pdf
 
     # Traverse all the objects
-    for i in range(1, num_of_objects):
     # for i, cur_obj in enumerate(my_pdf.objects):
+    for i in range(1, num_of_objects):
 
         cur_obj = my_pdf.get_object(i, 0)
 
         # Stuff that doesn't contain keys
         if isinstance(cur_obj, (pikepdf.String, pikepdf.Array, pikepdf.Name)):
             continue
-        if not isinstance(cur_obj,
-                          (pikepdf.objects.Object, pikepdf.Stream)):
+        if not isinstance(cur_obj, (pikepdf.objects.Object, pikepdf.Stream)):
             continue
 
         for name in UNDESIRED_NAMES:
@@ -99,18 +98,16 @@ def delete_metadata(filename):
 
         delete_javascript(cur_obj, i)
 
-    # Remove from the document
+    # Remove from the document root
     for name in UNDESIRED_NAMES:
         delete_name(my_pdf.root, name)
 
     # FIXME: This doesn't seem to work
     delete_name(my_pdf.root, '/Info')
-
     # FIXME: This does
     delete_name(my_pdf.trailer, '/Info', -2)
 
-    ## FIXME: The following may be useless with the deletion above
-
+    # FIXME: The following may be useless with the deletions above
     # Remove the only /Title that we want
     delete_name(my_pdf.docinfo, '/Title', -1)
     delete_name(my_pdf.docinfo, '/OpenAction', -1)
