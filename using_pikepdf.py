@@ -21,12 +21,13 @@ UNDESIRED_NAMES = [
     '/Info',
     '/PageLayout',
 
-    # '/OCProperties',  # Optional Content (sometimes, hidden, sometimes not)
+    # '/OCProperties',  # FIXME: Optional Content (sometimes, hidden, sometimes not)
 
     # Date stuff
     '/LastModified',
     '/ModDate',
     '/M',  # FIXME: probably only removed from annotations
+    # '/NM',  # FIXME: maybe should not be removed
 
     # pdftex stuff
     '/PTEX.Fullbanner',
