@@ -42,35 +42,6 @@ def delete_name(obj, name, num=None):
         print('    **** Removed name: %s from obj %d.' % (name, num))
 
 
-def singleton_dct_in_array(image_obj):
-    imgfilter = image_obj.Filter
-
-    return (isinstance(imgfilter, pikepdf.Array) and
-            len(imgfilter) == 1 and
-            imgfilter[0] == '/DCTDecode')
-
-
-def vanilla_colorspaces(image_obj):
-    return image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray')
-
-
-def devn_colorspaces(image_obj):
-    colorspace = image_obj.ColorSpace
-
-    return (isinstance(colorspace, pikepdf.Array) and
-            colorspace[0] == '/DeviceN' and
-            (colorspace[2] in ('/DeviceRGB', '/DeviceGray')))
-
-
-def icc_colorspaces(image_obj):
-    colorspace = image_obj.ColorSpace
-
-    return (isinstance(colorspace, pikepdf.Array) and
-            colorspace[0] == '/ICCBased' and
-            (len(colorspace) >= 2 and (('/Alternate' not in colorspace[1]) or
-                                       (str(colorspace[1].Alternate) in ('/DeviceRGB', '/DeviceGray')))))
-
-
 def main(tmpdirname, pdf_name):
     total_savings = 0
 
@@ -96,19 +67,6 @@ def main(tmpdirname, pdf_name):
         # Unfortunately, jpgcrush only works with RGB or grayscale images.
         if image_obj.ColorSpace == '/DeviceCMYK':
             continue
-
-        # if not (image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray') or
-        #         (isinstance(image_obj.ColorSpace, pikepdf.Array) and
-        #          image_obj.ColorSpace[0] == '/DeviceN' and image_obj.ColorSpace[2] in
-        #          ('/DeviceRGB', '/DeviceGray'))):
-        #     continue
-
-        # FIXME: Enable this code to process more images
-        # if not (image_obj.ColorSpace in ('/DeviceRGB', '/DeviceGray') or
-        #         (isinstance(image_obj.ColorSpace, pikepdf.Array) and
-        #          image_obj.ColorSpace[0] == '/ICCBased' and str(image_obj.ColorSpace[1].Alternate) in
-        #          ('/DeviceRGB', '/DeviceGray'))):
-        #     continue
 
         img_num += 1
         logging.debug('Found a JPEG as %s', image_obj.ColorSpace)
