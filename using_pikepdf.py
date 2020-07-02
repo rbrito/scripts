@@ -102,11 +102,6 @@ def delete_metadata(filename):
     for name in UNDESIRED_NAMES:
         delete_name(my_pdf.root, name)
 
-    # FIXME: This doesn't seem to work
-    delete_name(my_pdf.root, '/Info')
-    # FIXME: This does
-    delete_name(my_pdf.trailer, '/Info', -2)
-
     # FIXME: The following may be useless with the deletions above
     # Remove the only /Title that we want
     delete_name(my_pdf.docinfo, '/Title', -1)
@@ -115,6 +110,11 @@ def delete_metadata(filename):
     # Remove any other stuff from the docinfo dictionary
     for key in my_pdf.docinfo.keys():
         delete_name(my_pdf.docinfo, key, -1)
+
+    # FIXME: This doesn't seem to work
+    delete_name(my_pdf.root, '/Info')
+    # FIXME: This does
+    delete_name(my_pdf.trailer, '/Info', -2)
 
     # FIXME: Perhaps use pdfsizeopt instead?
     my_pdf.remove_unreferenced_resources()
