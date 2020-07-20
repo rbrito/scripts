@@ -59,13 +59,13 @@ def delete_javascript(obj, num):
         del obj['/JS']
         del obj['/S']
 
-        print('    **** Removed Javascript from obj %d.' % num)
+        print(f'    **** Removed Javascript from obj {num}.')
 
 
 def delete_name(obj, name, num=None):
     if name in obj:
         del obj[name]
-        print('    **** Removed name: %s from obj %d.' % (name, num))
+        print(f'    **** Removed name: {name} from obj {num}.')
 
 
 def delete_metadata(filename):
@@ -125,7 +125,7 @@ def delete_metadata(filename):
     final_size = os.path.getsize(final_filename)
     total_savings = original_size - final_size
 
-    print('Saved %d bytes to create %s' % (total_savings, final_filename))
+    print(f'Saved {total_savings} bytes to create {final_filename}')
 
 
 if __name__ == '__main__':
