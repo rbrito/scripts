@@ -25,24 +25,36 @@ import pikepdf
 # file. Ideally, this should be supported by pikepdf, but it currently
 # isn't, AFAIK.
 def num_image_objects(pdf):
+    """
+    Return number of external images in the PDF document pdf.
+    """
     return sum(1 for obj in pdf.objects if isinstance(obj, pikepdf.Stream)
                and '/Subtype' in obj and obj['/Subtype'] == '/Image')
 
 
 # Generator to iterate over (non-inlined) image objects more pythonic
 def image_objects(pdf):
+    """
+    Iterates over (non-inlined) image objects in the PDF document pdf.
+    """
     for obj in pdf.objects:
         if isinstance(obj, pikepdf.Stream) and '/Subtype' in obj and obj['/Subtype'] == '/Image':
             yield obj
 
 
 def delete_name(obj, name, num=None):
+    """
+    Remove a PDF name from object obj with number num.
+    """
     if name in obj:
         del obj[name]
         print(f'    **** Removed name: {name} from obj {num}.')
 
 
 def main(tmpdirname, pdf_name):
+    """
+    Entry point of the program.
+    """
     total_savings = 0
 
     logging.info('Processing %s.', pdf_name)
