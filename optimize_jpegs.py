@@ -39,7 +39,7 @@ def image_objects(pdf):
 def delete_name(obj, name, num=None):
     if name in obj:
         del obj[name]
-        print('    **** Removed name: %s from obj %d.' % (name, num))
+        print(f'    **** Removed name: {name} from obj {num}.')
 
 
 def main(tmpdirname, pdf_name):
