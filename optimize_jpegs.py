@@ -80,20 +80,12 @@ def main(tmpdirname, pdf_name):
 
         subprocess.check_call(['jpgcrush', tempname])
 
-        # Unfortunately, the -purejpg of jhead is too aggressive and may
-        # strip way too much to the point of modifying the image, in some
-        # cases.
-        #
-        # The dangerous option seems to be '-du', since it strips some
-        # metadata (in particular Adobe's "APP14" metadata) that interferes
-        # with how the image colors are decoded.  See
+        # Use exiftool to remove jpeg metadata. It is carefult to not remove
+        # some metadata (in particular Adobe's "APP14" metadata) that
+        # interferes with how the image colors are decoded.  See
         # https://exiftool.org/forum/index.php?topic=6448.msg32114#msg32114
         # for information from Exiftool's author.
-        #
-        # Note: the two following seem unsafe
-        # subprocess.check_call(['jhead', '-dc', '-de', '-di', '-dx', '-dt', source.name])
-        # subprocess.check_call(['jhead', '-purejpg', source.name])
-        subprocess.check_call(['jhead', '-dc', '-de', '-dt', source.name])
+        subprocess.check_call(['exiftool', '-overwrite_original', '-all=', source.name])
 
         targetfn = open(tempname, 'rb')
         target = targetfn.read()
