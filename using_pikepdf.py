@@ -10,7 +10,6 @@ UNDESIRED_NAMES = [
     # From the infodict
     '/AcroForm',
     '/Author',
-    '/CreationDate',
     '/Creator',
     '/Keywords',
     '/OpenAction',
@@ -24,6 +23,7 @@ UNDESIRED_NAMES = [
     # '/OCProperties',  # FIXME: Optional Content (sometimes, hidden, sometimes not)
 
     # Date stuff
+    '/CreationDate',
     '/LastModified',
     '/ModDate',
     '/M',  # FIXME: probably only removed from annotations
