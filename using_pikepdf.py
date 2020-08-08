@@ -87,7 +87,8 @@ def delete_metadata(filename):
 
     num_of_objects = my_pdf.trailer['/Size']  # this includes the object 0
 
-    # FIXME: somehow, using enumerate seems slower, when profiling with a large file:
+    # FIXME: somehow, using enumerate seems slower, when profiling with a
+    # large file:
     #
     # perf stat --repeat=10 using_pikepdf.py \
     # katz-lindell-introduction-to-modern-cryptography.pso.pdfa.unc.pso.pso.pdf
