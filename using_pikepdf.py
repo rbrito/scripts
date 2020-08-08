@@ -52,6 +52,11 @@ UNDESIRED_NAMES = [
 
     # From annotations.
     '/NM',  # FIXME: Test; maybe should not be removed
+
+    # FIXME: remove /SWF files (and other names) from a /Navigator entry
+    # (adobe extensions level 3).
+    '/RichMediaExecute',
+    '/ProcSet',  # "Acrobat 5.0 and later ignores procedure sets." (page 126)
 ]
 
 
