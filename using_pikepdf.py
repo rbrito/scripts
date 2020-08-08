@@ -26,8 +26,6 @@ UNDESIRED_NAMES = [
     '/CreationDate',
     '/LastModified',
     '/ModDate',
-    '/M',  # FIXME: probably only removed from annotations
-    # '/NM',  # FIXME: maybe should not be removed
 
     # pdftex stuff
     '/PTEX.Fullbanner',
@@ -51,6 +49,9 @@ UNDESIRED_NAMES = [
 
     # Embedded files
     '/EmbeddedFiles'
+
+    # From annotations.
+    '/NM',  # FIXME: Test; maybe should not be removed
 ]
 
 
@@ -58,8 +59,13 @@ def delete_javascript(obj, num):
     if ('/JS' in obj) and ('/S' in obj):
         del obj['/JS']
         del obj['/S']
-
         print(f'    **** Removed Javascript from obj {num}.')
+
+
+def delete_annotations_moddate(obj, num):
+    if ('/Type' in obj) and (obj.Type == '/Annot') and '/M' in obj:
+        del obj['/M']
+        print(f'    **** Removed /M from obj {num}.')
 
 
 def delete_name(obj, name, num=None):
@@ -97,6 +103,7 @@ def delete_metadata(filename):
             delete_name(cur_obj, name, i)
 
         delete_javascript(cur_obj, i)
+        delete_annotations_moddate(cur_obj, i)
 
     # Remove from the document root
     for name in UNDESIRED_NAMES:
