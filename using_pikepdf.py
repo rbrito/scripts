@@ -48,7 +48,7 @@ UNDESIRED_NAMES = [
     '/Lambkin',
 
     # Embedded files
-    '/EmbeddedFiles'
+    '/EmbeddedFiles',
 
     # From annotations.
     '/NM',  # FIXME: Test; maybe should not be removed
