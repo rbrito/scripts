@@ -19,6 +19,8 @@ UNDESIRED_NAMES = [
     '/Lang',
     '/Info',
     '/PageLayout',
+    '/PageMode',
+    '/Version',
 
     # '/OCProperties',  # FIXME: Optional Content (sometimes, hidden, sometimes not)
 
