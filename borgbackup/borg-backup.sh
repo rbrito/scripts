@@ -3,7 +3,7 @@
 borg create \
      --verbose \
      --stats \
-     --compression zlib \
+     --compression zstd \
      --progress \
      --one-file-system \
      --exclude-caches \
