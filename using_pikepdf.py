@@ -54,6 +54,7 @@ UNDESIRED_NAMES = [
 
     # From annotations.
     '/NM',  # FIXME: Test; maybe should not be removed
+    # '/RC',  # FIXME: idem
 
     # FIXME: remove /SWF files (and other names) from a /Navigator entry
     # (adobe extensions level 3).
@@ -73,6 +74,22 @@ def delete_annotations_moddate(obj, num):
     if ('/Type' in obj) and (obj.Type == '/Annot') and '/M' in obj:
         del obj['/M']
         print(f'    **** Removed /M from obj {num}.')
+
+
+def delete_annotations_rc(obj, num):
+    if ('/Subtype' in obj) and (obj.Subtype == '/FreeText') and '/RC' in obj:
+        del obj['/RC']
+        print(f'    **** Removed /RC from obj {num}.')
+
+def delete_annotations_t(obj, num):
+    if ('/Subtype' in obj) and (obj.Subtype == '/FreeText') and '/T' in obj:
+        del obj['/T']
+        print(f'    **** Removed /T from obj {num}.')
+
+def delete_annotations_c(obj, num):
+    if ('/Subtype' in obj) and (obj.Subtype == '/FreeText') and '/C' in obj:
+        del obj['/C']
+        print(f'    **** Removed /C from obj {num}.')
 
 
 def delete_name(obj, name, num=None):
@@ -112,6 +129,11 @@ def delete_metadata(filename):
 
         delete_javascript(cur_obj, i)
         delete_annotations_moddate(cur_obj, i)
+
+        # Not working right now
+        # delete_annotations_rc(cur_obj, i)
+        # delete_annotations_t(cur_obj, i)
+        delete_annotations_c(cur_obj, i)
 
     # Remove from the document root
     for name in UNDESIRED_NAMES:
