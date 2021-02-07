@@ -69,6 +69,8 @@ def main(tmpdirname, pdf_name):
         if '/Filter' not in image_obj:
             continue
 
+        # FIXME: decode also if a DCT encoded object has a Deflate filter
+        # (or other filters like base85, RLE etc).
         # FIXME: to improve *a lot*
         if (image_obj.Filter != '/DCTDecode' and
             not (isinstance(image_obj.Filter, pikepdf.Array) and
