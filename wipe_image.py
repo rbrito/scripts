@@ -23,15 +23,17 @@ def threshold_image(in_im, threshold=188, negated=False):
     #
     # Longhand version of the lambdas:
     #
-    # | shorthand               | Longhand                    |
-    # +-------------------------+-----------------------------+
-    # | p > threshold and 255   | 255 if p > threshold else 0 |
-    # | p <= threshold or 0     | 0 if p <= thresold else 255 |
+    # | shorthand                       | Longhand                    |
+    # +---------------------------------+-----------------------------+
+    # | p > threshold and 255           | 255 if p > threshold else 0 |
+    # | 255 - (p > threshold and 255)   | 0 if p <= thresold else 255 |
+    # | (p <= threshold) * 255          | 0 if p <= thresold else 255 |
 
     if not negated:
         effective_filter = lambda p: 0 if p <= threshold else 255
     else:
         effective_filter = lambda p: 255 if p <= threshold else 0
+
     return in_im.convert('L').point(effective_filter).convert('1', dither=None)
 
 
