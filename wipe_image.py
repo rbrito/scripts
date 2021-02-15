@@ -9,17 +9,30 @@ from tqdm import tqdm
 
 WHITE = "#fff"
 
-
 # Method taken from jbig2enc, which uses leptonica's pixThresholdToBinary
 # function on a PIX.
-def threshold_image(in_im, threshold=188):
+def threshold_image(in_im, threshold=188, negated=False):
     '''
     in_im (should be) a grayscale PIL.Image. The returned image is a B/W
     PIL.image.
 
     The threshold value was taken from jbig2enc too.
+
+    **Notice:** 255 is black, 0 is white.
     '''
-    return in_im.convert('L').point(lambda p: p > threshold and 255).convert('1', dither=None)
+    #
+    # Longhand version of the lambdas:
+    #
+    # | shorthand               | Longhand                    |
+    # +-------------------------+-----------------------------+
+    # | p > threshold and 255   | 255 if p > threshold else 0 |
+    # | p <= threshold or 0     | 0 if p <= thresold else 255 |
+
+    if not negated:
+        effective_filter = lambda p: 0 if p <= threshold else 255
+    else:
+        effective_filter = lambda p: 255 if p <= threshold else 0
+    return in_im.convert('L').point(effective_filter).convert('1', dither=None)
 
 
 def deskew(im):
@@ -59,7 +72,7 @@ def wipe_borders(in_file, out_file):
         draw.rectangle([0, 0, border, im.height], fill=WHITE)  # left
         draw.rectangle([im.width - border, 0, im.width, im.height], fill=WHITE)  # right
 
-        despeckled = threshold_image(im)
+        despeckled = threshold_image(im, negated=False)
         deskewed = deskew(despeckled)
 
         # deskewed = deskew(threshold_image(im))
