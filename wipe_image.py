@@ -51,7 +51,7 @@ def despeckle(im, size=2):
     return Pix.frompil(im).despeckle(size).topil()
 
 
-def wipe_borders(in_file, out_file):
+def wipe_borders(in_file, out_file, wipe_borders=True):
     with Image.open(in_file) as im:
 
         xdpi, ydpi = im.info['dpi']
@@ -61,18 +61,20 @@ def wipe_borders(in_file, out_file):
         assert xdpi == ydpi
 
         dpi = xdpi
-        border = dpi / 10  # hunch
 
-        draw = ImageDraw.Draw(im)
+        if wipe_borders:
+            draw = ImageDraw.Draw(im)
 
-        # FIXME: Does the interpretation of top, left, bottom and right
-        # remain the same if the origin is moved from top-left to bottom-left?
-        draw.rectangle([0, 0, im.width, border], fill=WHITE)  # top
-        draw.rectangle([0, im.height - border, im.width, im.height], fill=WHITE)  # bottom
+            border = dpi / 10  # hunch
 
-        # If not desired, comment these
-        draw.rectangle([0, 0, border, im.height], fill=WHITE)  # left
-        draw.rectangle([im.width - border, 0, im.width, im.height], fill=WHITE)  # right
+            # FIXME: Does the interpretation of top, left, bottom and right
+            # remain the same if the origin is moved from top-left to bottom-left?
+            draw.rectangle([0, 0, im.width, border], fill=WHITE)  # top
+            draw.rectangle([0, im.height - border, im.width, im.height], fill=WHITE)  # bottom
+
+            # If not desired, comment these
+            draw.rectangle([0, 0, border, im.height], fill=WHITE)  # left
+            draw.rectangle([im.width - border, 0, im.width, im.height], fill=WHITE)  # right
 
         despeckled = threshold_image(im, negated=False)
         deskewed = deskew(despeckled)
