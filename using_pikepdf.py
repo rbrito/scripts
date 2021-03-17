@@ -170,5 +170,7 @@ def delete_metadata(filename):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+
     for filename in sys.argv[1:]:
         delete_metadata(filename)
