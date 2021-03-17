@@ -148,7 +148,6 @@ def perform_optimizations(tmpdirname, filename):
     # Here we actually process the file
     delete_metadata(my_pdf)
 
-    # FIXME: Perhaps use pdfsizeopt instead?
     my_pdf.remove_unreferenced_resources()
 
     final_filename = os.path.splitext(filename)[0] + '.clean.pdf'
