@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import logging
 import os.path
 import sys
 
@@ -67,39 +68,41 @@ def delete_javascript(obj, num):
     if ('/JS' in obj) and ('/S' in obj):
         del obj['/JS']
         del obj['/S']
-        print(f'    **** Removed Javascript from obj {num}.')
+        logging.info('    **** Removed Javascript from obj %d.', num)
 
 
 def delete_annotations_moddate(obj, num):
     if ('/Type' in obj) and (obj.Type == '/Annot') and '/M' in obj:
         del obj['/M']
-        print(f'    **** Removed /M from obj {num}.')
+        logging.info('    **** Removed /M from obj %d.', num)
 
 
 def delete_annotations_rc(obj, num):
     if ('/Subtype' in obj) and (obj.Subtype == '/FreeText') and '/RC' in obj:
         del obj['/RC']
-        print(f'    **** Removed /RC from obj {num}.')
+        logging.info('    **** Removed /RC from obj %d.', num)
+
 
 def delete_annotations_t(obj, num):
     if ('/Subtype' in obj) and (obj.Subtype == '/FreeText') and '/T' in obj:
         del obj['/T']
-        print(f'    **** Removed /T from obj {num}.')
+        logging.info('    **** Removed /T from obj %d.', num)
+
 
 def delete_annotations_c(obj, num):
     if ('/Subtype' in obj) and (obj.Subtype == '/FreeText') and '/C' in obj:
         del obj['/C']
-        print(f'    **** Removed /C from obj {num}.')
+        logging.info('    **** Removed /C from obj %d.', num)
 
 
 def delete_name(obj, name, num=None):
     if name in obj:
         del obj[name]
-        print(f'    **** Removed name: {name} from obj {num}.')
+        logging.info('    **** Removed name: %s from obj %d.', name, num)
 
 
 def delete_metadata(filename):
-    print(f'Processing {filename}')
+    logging.info('Processing %s', filename)
 
     original_size = os.path.getsize(filename)
     my_pdf = pikepdf.open(filename)
@@ -162,7 +165,7 @@ def delete_metadata(filename):
     final_size = os.path.getsize(final_filename)
     total_savings = original_size - final_size
 
-    print(f'Saved {total_savings} bytes to create {final_filename}')
+    logging.info('Saved %d bytes to create %s', total_savings, final_filename)
 
 
 if __name__ == '__main__':
