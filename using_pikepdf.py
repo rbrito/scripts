@@ -23,7 +23,8 @@ UNDESIRED_NAMES = [
     '/PageMode',
     '/Version',
 
-    # '/OCProperties',  # FIXME: Optional Content (sometimes, hidden, sometimes not)
+    # FIXME: Optional Content (sometimes, hidden, sometimes not)
+    # '/OCProperties',
 
     # Date stuff
     '/CreationDate',
