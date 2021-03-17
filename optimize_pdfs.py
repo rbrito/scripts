@@ -1,4 +1,22 @@
 #!/usr/bin/env python3
+'''
+This program removes some metadata from PDF files and tries to optimize
+JPEG files that it may contain. It is meant as a pre-processing step before
+running `pdfsizeopt`.
+
+Apart from Python itself, this program depends on the following programs or
+modules:
+
+* pikepdf (Debian package: python3-pikepdf)
+* exiftool (Debian package: libimage-exiftool-perl)
+* A patched version of jpgcrush (to optimize files crossing filesystems)
+
+A patched version of jpgcrush can be obtained from my PPA at:
+
+    https://launchpad.net/~rbrito/+archive/ubuntu/ppa
+
+While you are at it, you probably also want to grab a copy of jbig2enc.
+'''
 
 import logging
 import os.path
