@@ -104,6 +104,33 @@ def delete_name(obj, name, num=None):
         logging.info('    **** Removed name: %s from obj %d.', name, num)
 
 
+# Auxiliary functions for optimizing JPEGs
+def num_image_objects(pdf):
+    """
+    Return number of external images in the PDF document pdf.
+
+    This function performs a brute-force determination of the number of
+    (non-inlined) images in the pdf file.
+
+    Ideally, this operation should be supported by pikepdf, but it currently
+    isn't, AFAIK.
+    """
+    return sum(1 for obj in pdf.objects if isinstance(obj, pikepdf.Stream)
+               and '/Subtype' in obj and obj['/Subtype'] == '/Image')
+
+
+def image_objects(pdf):
+    """
+    Iterates over (non-inlined) image objects in the PDF document pdf.
+
+    This provides a generator to iterate over (non-inlined) image objects to
+    make the code that calls it more pythonic.
+    """
+    for obj in pdf.objects:
+        if isinstance(obj, pikepdf.Stream) and '/Subtype' in obj and obj['/Subtype'] == '/Image':
+            yield obj
+
+
 def perform_optimizations(tmpdirname, filename):
     """
     Opens the file and delegates the optimizations.
