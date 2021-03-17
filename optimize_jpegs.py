@@ -42,7 +42,7 @@ def image_objects(pdf):
             yield obj
 
 
-def main(tmpdirname, pdf_name):
+def optimize_jpegs(tmpdirname, pdf_name):
     """
     Entry point of the program.
     """
@@ -118,4 +118,4 @@ if __name__ == '__main__':
         with tempfile.TemporaryDirectory() as tmpdirname:
             logging.debug('    **** Temporary directory created: %s', tmpdirname)
             os.environ['TMPDIR'] = tmpdirname
-            main(tmpdirname, filename)
+            optimize_jpegs(tmpdirname, filename)
