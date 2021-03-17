@@ -65,6 +65,7 @@ UNDESIRED_NAMES = [
 ]
 
 
+# Auxiliary functions for removing PDF metadata
 def delete_javascript(obj, num):
     if ('/JS' in obj) and ('/S' in obj):
         del obj['/JS']
@@ -102,12 +103,32 @@ def delete_name(obj, name, num=None):
         logging.info('    **** Removed name: %s from obj %d.', name, num)
 
 
-def delete_metadata(filename):
-    logging.info('Processing %s', filename)
+def perform_optimizations(filename):
+    """
+    Opens the file and delegates the optimizations.
 
+    This is the real entry point of the program.
+    """
+    logging.info('Processing %s', filename)
     original_size = os.path.getsize(filename)
     my_pdf = pikepdf.open(filename)
 
+    # Here we actually process the file
+    delete_metadata(my_pdf)
+
+    # FIXME: Perhaps use pdfsizeopt instead?
+    my_pdf.remove_unreferenced_resources()
+
+    final_filename = os.path.splitext(filename)[0] + '.clean.pdf'
+    my_pdf.save(final_filename, fix_metadata_version=False)
+
+    final_size = os.path.getsize(final_filename)
+    total_savings = original_size - final_size
+
+    logging.info('Saved %d bytes to create %s', total_savings, final_filename)
+
+
+def delete_metadata(my_pdf):
     num_of_objects = my_pdf.trailer['/Size']  # this includes the object 0
 
     # FIXME: somehow, using enumerate seems slower, when profiling with a
@@ -157,20 +178,9 @@ def delete_metadata(filename):
     # FIXME: This does
     delete_name(my_pdf.trailer, '/Info', -2)
 
-    # FIXME: Perhaps use pdfsizeopt instead?
-    my_pdf.remove_unreferenced_resources()
-
-    final_filename = os.path.splitext(filename)[0] + '.clean.pdf'
-    my_pdf.save(final_filename, fix_metadata_version=False)
-
-    final_size = os.path.getsize(final_filename)
-    total_savings = original_size - final_size
-
-    logging.info('Saved %d bytes to create %s', total_savings, final_filename)
-
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
     for filename in sys.argv[1:]:
-        delete_metadata(filename)
+        perform_optimizations(filename)
