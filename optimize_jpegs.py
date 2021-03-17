@@ -122,5 +122,6 @@ if __name__ == '__main__':
     for filename in sys.argv[1:]:
         with tempfile.TemporaryDirectory() as tmpdirname:
             logging.debug('    **** Temporary directory created: %s', tmpdirname)
+            # FIXME: Document why we have to set TMPDIR
             os.environ['TMPDIR'] = tmpdirname
             process_jpegs(tmpdirname, filename)
