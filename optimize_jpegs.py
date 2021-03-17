@@ -42,15 +42,6 @@ def image_objects(pdf):
             yield obj
 
 
-def delete_name(obj, name, num=None):
-    """
-    Remove a PDF name from object obj with number num.
-    """
-    if name in obj:
-        del obj[name]
-        print(f'    **** Removed name: {name} from obj {num}.')
-
-
 def main(tmpdirname, pdf_name):
     """
     Entry point of the program.
@@ -113,8 +104,6 @@ def main(tmpdirname, pdf_name):
 
     final_filename = os.path.splitext(pdf_name)[0] + '.jpg.pdf'
     logging.info('Saved %d bytes to create %s', total_savings, final_filename)
-
-    delete_name(my_pdf.trailer, '/Info', -2)
 
     my_pdf.remove_unreferenced_resources()
     my_pdf.save(final_filename, fix_metadata_version=False)
