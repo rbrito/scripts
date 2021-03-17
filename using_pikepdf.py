@@ -7,7 +7,7 @@ import tempfile
 
 import pikepdf
 
-
+# Here we list what kind of metadata we remove from the PDF.
 UNDESIRED_NAMES = [
     # From the infodict
     '/AcroForm',
