@@ -42,15 +42,8 @@ def image_objects(pdf):
             yield obj
 
 
-def optimize_jpegs(tmpdirname, pdf_name):
-    """
-    Entry point of the program.
-    """
+def optimize_jpegs(tmpdirname, my_pdf):
     total_savings = 0
-
-    logging.info('Processing %s.', pdf_name)
-
-    my_pdf = pikepdf.open(pdf_name)
 
     img_num = 0
     # total_objs = num_image_objects(mypdf)
@@ -102,6 +95,18 @@ def optimize_jpegs(tmpdirname, pdf_name):
 
         total_savings += size_before - size_after
 
+    return total_savings
+
+
+def process_jpegs(tmpdirname, pdf_name):
+    """
+    Entry point of the program.
+    """
+    logging.info('Processing %s.', pdf_name)
+    my_pdf = pikepdf.open(pdf_name)
+
+    total_savings = optimize_jpegs(tmpdirname, my_pdf)
+
     final_filename = os.path.splitext(pdf_name)[0] + '.jpg.pdf'
     logging.info('Saved %d bytes to create %s', total_savings, final_filename)
 
@@ -118,4 +123,4 @@ if __name__ == '__main__':
         with tempfile.TemporaryDirectory() as tmpdirname:
             logging.debug('    **** Temporary directory created: %s', tmpdirname)
             os.environ['TMPDIR'] = tmpdirname
-            optimize_jpegs(tmpdirname, filename)
+            process_jpegs(tmpdirname, filename)
