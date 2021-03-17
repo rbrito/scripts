@@ -2,6 +2,7 @@
 
 import logging
 import os.path
+import subprocess
 import sys
 import tempfile
 
@@ -131,6 +132,70 @@ def image_objects(pdf):
             yield obj
 
 
+def optimize_jpegs(tmpdirname, my_pdf):
+    """
+    Given a tmpdirname and a PDF object, this function iterates over the
+    non-inline images that are DCT encoded (i.e., JPEGs) and tries to
+    optimize them, by:
+
+    * optimizing the Huffman tables of the JPEGs
+    * removing non-essential metadata from the JPEGs.
+    """
+    total_savings = 0
+
+    img_num = 0
+    # total_objs = num_image_objects(mypdf)
+    # for image_obj in tqdm(image_objects(my_pdf), total=total_objs):
+    for image_obj in image_objects(my_pdf):
+
+        if '/Filter' not in image_obj:
+            continue
+
+        # FIXME: decode also if a DCT encoded object has a Deflate filter
+        # (or other filters like base85, RLE etc).
+        # FIXME: to improve *a lot*
+        if (image_obj.Filter != '/DCTDecode' and
+            not (isinstance(image_obj.Filter, pikepdf.Array) and
+                 len(image_obj.Filter) == 1 and
+                 image_obj.Filter[0] == '/DCTDecode')):
+            continue
+
+        # Unfortunately, jpgcrush only works with RGB or grayscale images.
+        if image_obj.ColorSpace == '/DeviceCMYK':
+            continue
+
+        img_num += 1
+        logging.debug('Found a JPEG as %s', image_obj.ColorSpace)
+
+        tempname = os.path.join(tmpdirname, f'img-{img_num:05d}.jpg')
+        source = open(tempname, 'wb')
+
+        size_before = source.write(image_obj.read_raw_bytes())
+        logging.debug('Wrote %d bytes to the tempfile %s.', size_before, tempname)
+        source.close()
+
+        subprocess.check_call(['jpgcrush', tempname])
+
+        # Use exiftool to remove jpeg metadata. It is carefult to not remove
+        # some metadata (in particular Adobe's "APP14" metadata) that
+        # interferes with how the image colors are decoded.  See
+        # https://exiftool.org/forum/index.php?topic=6448.msg32114#msg32114
+        # for information from Exiftool's author.
+        subprocess.check_call(['exiftool', '-overwrite_original', '-all=', source.name])
+
+        targetfn = open(tempname, 'rb')
+        target = targetfn.read()
+
+        size_after = len(target)
+        logging.debug('Read back %d bytes from the tempfile %s.', size_after, tempname)
+        image_obj.write(target, filter=pikepdf.Name('/DCTDecode'))
+        logging.debug('The image is back on the PDF file.')
+
+        total_savings += size_before - size_after
+
+    return total_savings
+
+
 def perform_optimizations(tmpdirname, filename):
     """
     Opens the file and delegates the optimizations.
@@ -147,16 +212,17 @@ def perform_optimizations(tmpdirname, filename):
 
     # Here we actually process the file
     delete_metadata(my_pdf)
+    savings_with_images = optimize_jpegs(tmpdirname, my_pdf)
 
     my_pdf.remove_unreferenced_resources()
-
     final_filename = os.path.splitext(filename)[0] + '.clean.pdf'
     my_pdf.save(final_filename, fix_metadata_version=False)
 
     final_size = os.path.getsize(final_filename)
     total_savings = original_size - final_size
 
-    logging.info('Saved %d bytes to create %s', total_savings, final_filename)
+    logging.info('Saved %d bytes (%d in images) to create %s',
+                 total_savings, savings_with_images, final_filename)
 
 
 def delete_metadata(my_pdf):
