@@ -3,6 +3,7 @@
 import logging
 import os.path
 import sys
+import tempfile
 
 import pikepdf
 
@@ -103,11 +104,15 @@ def delete_name(obj, name, num=None):
         logging.info('    **** Removed name: %s from obj %d.', name, num)
 
 
-def perform_optimizations(filename):
+def perform_optimizations(tmpdirname, filename):
     """
     Opens the file and delegates the optimizations.
 
-    This is the real entry point of the program.
+    The file to operate on is named filename and it will use a temporary
+    directory called tmpdirname for whatever it needs.
+
+    tmpdirname will be needed to optimize the JPEG files contained in the
+    PDF file, as we will delegate the task to jpgcrush and to exiftool.
     """
     logging.info('Processing %s', filename)
     original_size = os.path.getsize(filename)
@@ -183,4 +188,8 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
     for filename in sys.argv[1:]:
-        perform_optimizations(filename)
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            logging.debug('    **** Temporary directory created: %s', tmpdirname)
+            # FIXME: Document why we have to set TMPDIR
+            os.environ['TMPDIR'] = tmpdirname
+            perform_optimizations(tmpdirname, filename)
