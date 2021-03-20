@@ -1,6 +1,8 @@
 re:/home/[^/]+/.acetoneiso/.*
 re:/home/[^/]+/.audacity-data/.*
+re:/home/[^/]+/.bundle/.*
 re:/home/[^/]+/.cache/.*
+re:/home/[^/]+/.cargo/.*
 re:/home/[^/]+/.ccache/.*
 re:/home/[^/]+/.comments/.*
 re:/home/[^/]+/.cvsps/.*
@@ -12,9 +14,12 @@ re:/home/[^/]+/.dotfiles/kodi/userdata/Thumbnails/.*
 re:/home/[^/]+/.dropbox-dist/.*
 re:/home/[^/]+/.dropbox/.*\.tmp
 re:/home/[^/]+/.dvdcss/.*
+re:/home/[^/]+/.fltk/.*
 re:/home/[^/]+/.gcp/.*
 re:/home/[^/]+/.gdfuse/default/cache/.*
 re:/home/[^/]+/.gnome2/accels/.*
+re:/home/[^/]+/.ipython/.*
+re:/home/[^/]+/.jupyter/.*
 re:/home/[^/]+/.local/share/TelegramDesktop/.*.txt
 re:/home/[^/]+/.local/share/TelegramDesktop/tdata/emoji/cache.*
 re:/home/[^/]+/.local/share/TelegramDesktop/tdata/temp/.*
@@ -30,9 +35,11 @@ re:/home/[^/]+/.macromedia/.*
 re:/home/[^/]+/.mozilla/firefox/[^.]+.default/datareporting/archived/.*
 re:/home/[^/]+/.mozilla/firefox/[^.]+.default/storage/.*
 re:/home/[^/]+/.mozilla/firefox/[^.]+.default/weave/logs/.*
+re:/home/[^/]+/.mpop_uidls/.*
 re:/home/[^/]+/.mtab.fuseiso
 re:/home/[^/]+/Desktop/youtube-dl.*
 re:/home/[^/]+/Downloads/videos/finished/.*
+re:/home/[^/]+/Downloads/videos/no-backup/.*
 re:/home/[^/]+/Dropbox/.dropbox.cache/.*
 re:/home/[^/]+/Maildir/.*dovecot.*
 re:/home/[^/]+/Music/.*
