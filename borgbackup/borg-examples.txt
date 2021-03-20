@@ -1,6 +1,6 @@
 borg list --progress /media/rbrito/Seagate-2000GB-1/borg-backups/
 borg prune --stats --keep-daily 14 /media/rbrito/Seagate-2000GB-1/borg-backups/
-borg prune --dry-run -v --stats --list --progress --keep-daily=y --keep-weekly=4 --keep-monthly=-1 /media/rbrito/Seagate-2000GB-1/borg-backups/
+borg prune --dry-run -v --stats --list --progress --keep-daily=7 --keep-weekly=4 --keep-monthly=-1 /media/rbrito/Seagate-2000GB-1/borg-backups/
 borg delete --stats --progress /media/rbrito/Seagate-2000GB-1/borg-backups/ zatz-2017-11-15T01:34:59
 borg info --progress /media/rbrito/Seagate-2000GB-1/borg-backups/
 borg diff --progress --verbose /media/rbrito/Seagate-2000GB-1/borg-backups/::zatz-2019-09-07T22:59:34 zatz-2019-10-05T04:59:55
