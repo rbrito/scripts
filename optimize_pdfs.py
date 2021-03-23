@@ -18,10 +18,10 @@ A patched version of jpgcrush can be obtained from my PPA at:
 While you are at it, you probably also want to grab a copy of jbig2enc.
 '''
 
+import argparse
 import logging
 import os.path
 import subprocess
-import sys
 import tempfile
 
 import pikepdf
@@ -214,7 +214,7 @@ def optimize_jpegs(tmpdirname, my_pdf):
     return total_savings
 
 
-def perform_optimizations(tmpdirname, filename):
+def perform_optimizations(tmpdirname, filename, remove_js=False):
     """
     Opens the file and delegates the optimizations.
 
@@ -229,7 +229,7 @@ def perform_optimizations(tmpdirname, filename):
     my_pdf = pikepdf.open(filename)
 
     # Here we actually process the file
-    delete_metadata(my_pdf)
+    delete_metadata(my_pdf, remove_js)
     savings_with_images = optimize_jpegs(tmpdirname, my_pdf)
 
     my_pdf.remove_unreferenced_resources()
@@ -243,7 +243,7 @@ def perform_optimizations(tmpdirname, filename):
                  total_savings, savings_with_images, final_filename)
 
 
-def delete_metadata(my_pdf):
+def delete_metadata(my_pdf, remove_js):
     num_of_objects = my_pdf.trailer['/Size']  # this includes the object 0
 
     # FIXME: somehow, using enumerate seems slower, when profiling with a
@@ -267,7 +267,8 @@ def delete_metadata(my_pdf):
         for name in UNDESIRED_NAMES:
             delete_name(cur_obj, name, i)
 
-        delete_javascript(cur_obj, i)
+        if remove_js:
+            delete_javascript(cur_obj, i)
         delete_annotations_moddate(cur_obj, i)
 
         # Not working right now
@@ -295,11 +296,20 @@ def delete_metadata(my_pdf):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Remove metadata from PDF and try to optimize their JPGs.')
+
+    parser.add_argument('--remove-js', action='store_true', default=False,
+                        help='remove JavaScript from PDFs. (Default: False)')
+    parser.add_argument('filename', nargs='+',
+                        help='name of the file(s) to process')
+
+    args = parser.parse_args()
+
     logging.basicConfig(level=logging.INFO)
 
-    for filename in sys.argv[1:]:
+    for filename in args.filename:
         with tempfile.TemporaryDirectory() as tmpdirname:
             logging.debug('    **** Temporary directory created: %s', tmpdirname)
             # FIXME: Document why we have to set TMPDIR
             os.environ['TMPDIR'] = tmpdirname
-            perform_optimizations(tmpdirname, filename)
+            perform_optimizations(tmpdirname, filename, args.remove_js)
