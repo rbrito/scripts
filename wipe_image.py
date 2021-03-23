@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys
+import argparse
 
 from PIL import Image, ImageDraw
 
@@ -8,6 +8,7 @@ from ocrmypdf.leptonica import Pix
 from tqdm import tqdm
 
 WHITE = "#fff"
+BLACK = "#000"
 
 # Method taken from jbig2enc, which uses leptonica's pixThresholdToBinary
 # function on a PIX.
@@ -51,48 +52,85 @@ def despeckle(im, size=2):
     return Pix.frompil(im).despeckle(size).topil()
 
 
-def wipe_borders(in_file, out_file, wipe_borders=True):
+def wipe_borders(in_file, out_file, wipe_borders=True, border_width=None, to_deskew=False, to_despeckle=False, dpi=None, negated=False):
+    # print(f'  *** Options set: {wipe_borders=}, {border_width=}, {to_despeckle=}, {to_deskew=}, {dpi=}, {negated=}')
     with Image.open(in_file) as im:
 
-        xdpi, ydpi = im.info['dpi']
+        if dpi is None:
+            xdpi, ydpi = im.info['dpi']
 
-        # We only want to deal with images that have the same DPIs
-        # vertically and horizontally.
-        assert xdpi == ydpi
+            # We only want to deal with images that have the same DPIs
+            # vertically and horizontally.
+            assert xdpi == ydpi
 
-        dpi = xdpi
+            dpi = xdpi
 
         if wipe_borders:
             draw = ImageDraw.Draw(im)
 
-            border = dpi / 10  # hunch
+            if border_width:
+                border = border_width
+            else:
+                border = dpi / 10  # hunch
+
+            fill_color = WHITE if not negated else BLACK
 
             # FIXME: Does the interpretation of top, left, bottom and right
             # remain the same if the origin is moved from top-left to bottom-left?
-            draw.rectangle([0, 0, im.width, border], fill=WHITE)  # top
-            draw.rectangle([0, im.height - border, im.width, im.height], fill=WHITE)  # bottom
+            draw.rectangle([0, 0, im.width, border], fill=fill_color)  # top
+            draw.rectangle([0, im.height - border, im.width, im.height], fill=fill_color)  # bottom
 
             # If not desired, comment these
-            draw.rectangle([0, 0, border, im.height], fill=WHITE)  # left
-            draw.rectangle([im.width - border, 0, im.width, im.height], fill=WHITE)  # right
+            draw.rectangle([0, 0, border, im.height], fill=fill_color)  # left
+            draw.rectangle([im.width - border, 0, im.width, im.height], fill=fill_color)  # right
 
-        despeckled = threshold_image(im, negated=False)
-        deskewed = deskew(despeckled)
+        # This sucks so much and should be rewritten with context managers
+        if to_despeckle:
+            despeckled = despeckle(im, threshold_image(im, negated=negated))
+        else:
+            despeckled = threshold_image(im, negated=negated)
 
-        # deskewed = deskew(threshold_image(im))
-        # im.save(out_file, dpi=(DPI, DPI), resolution=DPI, compression="packbits")  # for PNGs: compress_level=1
+        if to_deskew:
+            deskewed = deskew(despeckled)
+        else:
+            deskewed = despeckled
 
         deskewed.save(out_file, dpi=(dpi, dpi), resolution=dpi, compression='group4')
-        deskewed.close()
-        # despeckled.save(out_file, dpi=(DPI, DPI), resolution=DPI, compression='group4')
+        if to_deskew:
+            deskewed.close()
         despeckled.close()
 
 
 if __name__ == '__main__':
-    if len(sys.argv) <= 1:
-        print('Usage: %s image [image ...]' % sys.argv[0])
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='Tweak scanned images to bind as PDFs or DJVUs.')
 
-    for in_file in tqdm(sys.argv[1:]):
-        # print('Processing <%s>.' % in_file)
-        wipe_borders(in_file, in_file + '.new.tif')
+    parser.add_argument('--deskew', action='store_true', default=True,
+                        help='deskew the images. (Default: True)')
+    parser.add_argument('--despeckle', action='store_true', default=False,
+                        help='despeckle the images. (Default: False)')
+    parser.add_argument('--dpi', default=None,
+                        help='set the DPI of files to process.'
+                        ' Only needed if the file doesn\'t have resolution indicated (e.g., pbm).'
+                        ' Automatically detected if possible.'
+                        ' (Default: guess from input otherwise, None)',
+                        type=int)
+    parser.add_argument('--border-width', default=False, type=int,
+                        help='width of border to blank. (Default: dpi/10)')
+    parser.add_argument('--wipe-borders', action='store_true', default=True,
+                        help='blank the border of the pages. (Default: True)')
+    parser.add_argument('--negated', action='store_true', default=False,
+                        help='negate the images to treat inverted images. (Default: False)')
+    parser.add_argument('filename', nargs='+',
+                        help='name of the file(s) to process')
+
+    args = parser.parse_args()
+
+    for in_file in tqdm(args.filename):
+        wipe_borders(in_file, in_file + '.new.tif',
+                     wipe_borders=args.wipe_borders,
+                     border_width=args.border_width,
+                     to_deskew=args.deskew,
+                     to_despeckle=args.despeckle,
+                     dpi=args.dpi,
+                     negated=args.negated
+                     )
