@@ -43,6 +43,7 @@ def time_to_timestamp(position):
     return float(dateutil.parser.parse('1970-01-01T%s UTC' %
                                        position).strftime('%s.%f'))
 
+
 # Kludge, as I can't seem to get everyting normalized in UTC
 EPOCH = time_to_timestamp('00:00:00')
 
