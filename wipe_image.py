@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
+import sys
 
 from PIL import Image, ImageDraw
 
@@ -57,13 +58,18 @@ def wipe_borders(in_file, out_file, wipe_borders=True, border_width=None, to_des
     with Image.open(in_file) as im:
 
         if dpi is None:
-            xdpi, ydpi = im.info['dpi']
+            try:
+                xdpi, ydpi = im.info['dpi']
 
-            # We only want to deal with images that have the same DPIs
-            # vertically and horizontally.
-            assert xdpi == ydpi
+                # We only want to deal with images that have the same DPIs
+                # vertically and horizontally.
+                assert xdpi == ydpi
 
-            dpi = xdpi
+                dpi = xdpi
+            except KeyError:
+                print(f'The input file {in_file} does not contain its DPI.'
+                      ' Please use the --dpi switch.')
+                sys.exit(1)
 
         if wipe_borders:
             draw = ImageDraw.Draw(im)
