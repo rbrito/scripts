@@ -11,6 +11,7 @@ from tqdm import tqdm
 WHITE = "#fff"
 BLACK = "#000"
 
+
 # Method taken from jbig2enc, which uses leptonica's pixThresholdToBinary
 # function on a PIX.
 def threshold_image(in_im, threshold=188, negated=False):
