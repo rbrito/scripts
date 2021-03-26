@@ -53,8 +53,10 @@ def despeckle(im, size=2):
     return Pix.frompil(im).despeckle(size).topil()
 
 
-def wipe_borders(in_file, out_file, wipe_borders=True, border_width=None, to_deskew=False, to_despeckle=False, dpi=None, negated=False):
-    # print(f'  *** Options set: {wipe_borders=}, {border_width=}, {to_despeckle=}, {to_deskew=}, {dpi=}, {negated=}')
+def wipe_borders(in_file, out_file, wipe_borders=True, border_width=None,
+                 to_deskew=False, to_despeckle=False, dpi=None, negated=False):
+    # print(f'  *** Options set: {wipe_borders=}, {border_width=},'
+    #       ' {to_despeckle=}, {to_deskew=}, {dpi=}, {negated=}')
     with Image.open(in_file) as im:
 
         if dpi is None:
