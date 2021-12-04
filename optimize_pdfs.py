@@ -278,7 +278,7 @@ def delete_metadata(my_pdf, remove_js):
 
     # Remove from the document root
     for name in UNDESIRED_NAMES:
-        delete_name(my_pdf.root, name)
+        delete_name(my_pdf.Root, name)
 
     # FIXME: The following may be useless with the deletions above
     # Remove the only /Title that we want
@@ -290,7 +290,7 @@ def delete_metadata(my_pdf, remove_js):
         delete_name(my_pdf.docinfo, key, -1)
 
     # FIXME: This doesn't seem to work
-    delete_name(my_pdf.root, '/Info')
+    delete_name(my_pdf.Root, '/Info')
     # FIXME: This does
     delete_name(my_pdf.trailer, '/Info', -2)
 
